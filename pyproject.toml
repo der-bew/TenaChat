@@ -1,7 +1,7 @@
 [project]
-name = "ethiopian-women-health-chatbot"
+name = "tenachat"
 version = "0.1.0"
-description = "Add your description here"
+description = "TenaChat with Agentic RAG"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -10,7 +10,11 @@ dependencies = [
     "fastapi[standard]>=0.117.1",
     "langchain-community>=0.3.29",
     "langchain-google-genai>=2.1.12",
+    "langchain-openai>=0.3.33",
+    "loguru>=0.7.3",
     "langgraph>=0.6.7",
+    "openai>=1.51.0",
+    "pymupdf>=1.24.9",
     "pre-commit>=4.3.0",
     "pytest>=8.4.2",
     "radis>=0.16.3",
@@ -19,4 +23,11 @@ dependencies = [
     "sqlalchemy>=2.0.43",
     "supabase>=2.19.0",
     "uvicorn>=0.36.0",
+    "docling>=2.24.0",
+    "google-generativeai>=0.8.3",
+    "langchain-google-vertexai>=2.0.7",
+    "sentence-transformers>=5.2.3",
+    "langchain>=1.2.11",
+    "marker-pdf>=1.6.1",
+    "pymupdf4llm>=1.27.2.1",
 ]

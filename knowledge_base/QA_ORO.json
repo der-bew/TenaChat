@@ -1,0 +1,792 @@
+[
+    {
+        "question": "Fistula maalii?",
+        "answer": "Fistulliin dhukkuba dubartii keessatti ujummee dhalootaa fi ujummee fincaanii ykn mar'umaa gidduutti uraa hin baramne ta'uun isaa, kunis fincaanii fi udaan dhowwatamuu dhabuu fida. Yeroo baay'ee sababa garmaalee dheeraa fi rakkisaa ta'een kan dhufu yoo ta'u, kunis yeroo da'umsaa tishuuwwan naannoo sanaa dhiibbaa jabaa waan argataniif du'anii uraa uumu.",
+        "category": "fistula"
+    },
+    {
+        "question": "Sababoonni dhukkuba fistulaa maal fa'i?",
+        "answer": "Sababni inni guddaan garmaalee dheeraa fi rakkisaa ta'eedha. Yeroo baay'ee sababa dhiyeessiifi gargaarsi yaalaa (fakkeenyaaf, baqaqsaanii) yeroo barbaachisutti waan hin argamneef garmaaleen sun dheerata. Mataan daa'imuusaa ujummee dhalootaa keessatti yeroo dheeraaf (sa'aatii hedduuf) taa'uudhaan tishuuwwan naannoo isaa irratti dhiibbaa uumee ajjeesa; tishuuwwan kun yeroo du'an uraatu uumama.",
+        "category": "fistula"
+    },
+    {
+        "question": "Mallattooleen dhukkuba fistulaa maal fa'i?",
+        "answer": "Mallattooleen ijoo: fincaanuu dhowwatamuu dhabuu ykn yaddaddhabdee fincaanuu dhangala'uu, fincaanuu ykn udaan ujumee dhalaa keessaa dhangala'uu, foolii gadhee, naannawa saalaa keessatti aarii fi hoqqisaa, dhukkuba fincaanuu yaddaddhabdee deebi'ee dhufu.",
+        "category": "fistula"
+    },
+    {
+        "question": "Dhukkuba fistulaa yaaluun ni danda'amaa?",
+        "answer": "Eeyyeen, fistulliin yaaluun ni danda'ama. Yaalichi baay'inaan baqaqsaanii (sirggiidhaa) fayyadamuun kan ta'u yoo ta'u, doktiteronni baqaqsaanii itti gaafatamanii fi leenjii addaa arganiidhaan kan geggeeffamu dha. Bu'aan isaa ol'aanaa dha; hanga 85-95% dhukkubsattootaa guutummaatti fayyuun danda'u.",
+        "category": "fistula"
+    },
+    {
+        "question": "Kaansarri harmaa maalii?",
+        "answer": "Kaansarri harmaa gosa kaansaraa tishuu harmaa keessatti uumamu yoo ta'u, yeroo baay'ee keessoo ujummoo aannanii (duktii) ykn qaamolee aannan oomishan (lobules) keessatti jalqaba. Dubartoota irratti kaansaroota yeroo baay'ee mul'atan keessaa isa tokko dha.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Kaansarri harmaa dhiirota irrattis ni uumamaa?",
+        "answer": "Eeyyeen, kaansarri harmaa dhiirota irratti uumamuu danda'a. Dhiirota irratti dubartoota wajjin yeroo wal bira qabamu baay'inni isaa baay'ee xiqqaa ta'us, dhiirotis dhukkuba kanaan waan qabamuu danda'aniifi. Kaansarri harmaa dhiirota irratti mul'atu, yeroo baay'ee tishuu harmaa xiqqaa lafee qomaa duuba jiru keessatti kan uumamu yoo ta'u, tishuun kun baay'inaan kan hin jirreefi.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Wantoonni saaxilamummaa kaansara harmaa dabalan maal fa'i?",
+        "answer": "Umuriin (waggaa 50 ol ta'uun), seenya maatii kaansara harmaa qabaachuun, jiinoonni dhaalaman tokko tokko (fakkeenyaaf BRCA1 fi BRCA2), yeroo dargaggummaa bahuu laguu (umurii 12 dura), yeroo dulloomuu (umurii 55 booda) turuun, ulfa ta'uu ishee kan jalqabdu yeroo umuriin ishee waggaa 30 ol ta'u ykn gonkuma hin ulfa'in, alkoolii dhuguu, furdatuu, fi yaala hormoonii fudhachuun kanneen dabalanidha.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Mallattooleen kaansara harmaa maal fa'i?",
+        "answer": "Gurdaa ykn waan akka kattaa fakkaatu gara harmaa ykn ubaa keessatti dhaga'amu haaraa ta'e, gogaan harmaa diimachuu ykn akka quncisaa birtukaanaa ta'uu, harmaan qixxaatummaa isaa dhabuu ykn guddachuu, ujummoo harmaa irraa dhangala'aan (dhiigaa ykn bishaanii) dhufuu, harmaan ujummoo isaa gara keessaa seenuu, harmaa ykn ubaa keessatti dhukkubsachuu ykn hoqqisaa qabaachu.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Kaansara harmaa mirkaneessuuf qorannonni akkamii barbaachisu?",
+        "answer": "Qorannaan harmaa (Clinical Breast Exam), mammogram (xaayii reyi harmaa), alcharaasawundii, EMaRii, fi baayoopisii (tishuu gurdaa irraa fudhatame qorachuun) dabalata.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Mammogram maalii? Yoom gochuu qabna?",
+        "answer": "Mammogram kaansara harmaa yeroo dheeraa dura adda baafachuuf gargaaru xaayii reyi addaa dha. Kaansara yeroo mallattoon isaa hin mul'anne adda baasuu danda'a. Umuriin waggaa 40-50 jalqabamee waggaa 1-2itti al tokko gochuun ni gorfama. Haa ta'u malee, seenya maatii ykn sababni saaxilamummaa kan biraa yoo jiraate, sana dura jalqabuun barbaachisaa ta'uu danda'a.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Ofiif ofii harmaa qorachuun akkamitti raawwatama?",
+        "answer": "Ji'a hunda, yeroo laguu booda guyyoota itti aanan keessa gochuun qaba. Fuullee fuldura dhaabattee harmaa kee xiinxaluun (qixxaatummaa, bifa, halluu), harka kee mataa irra kaa'attee quba keetiin geengoo geengoo gochuu, akkasumas ujummoo harmaa qabatuun dhangala'aan jiraachuu isaa mirkaneessuun.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Gosoonni yaala kaansara harmaa maal fa'i?",
+        "answer": "Yaalli kun akka gosaafi sadarkaa kaansaraatti murteeffama. Gosa yaalaa ijoo: baqaqsaanii (gurdaa qofaa yookaan guutummaa harmaa baafachuu), yaala radiyeeshini, keemoo, yaala hormoonii, fi yaala kallattiin gara kaansarii taasifamu.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Booda baqaqsaanii kaansara harmaa kunooftiin (care) akkamii barbaachisa?",
+        "answer": "Booda baqaqsaanii, madaan qulqulluu ta'uu isaa eeguun, harka fi gatiroo shaakaluun (liffiidimaa (lipedema) ittisuuf), qoricha dhukkuba balleessu fudhachuun, baqaqsaanii booda yeroon murtaa'etti doktora argachuun, yoo barbaachise keemoo yookaan radiyeeshinii jalqabuun.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Rakkinni fayyaa yeroo ulfaa yeroo baay'ee mul'atu maal fa'i?",
+        "answer": "Lallabuu fi hoqisuu (dhukkuba ganamaa), dadhabbii, fincaanuu yaddaddhabdee, miillan dhiita'uu, dhukkuba dugdaa, lafeensa (garaa dhukkubsachuu), ho'a onnee (gubaa), dhiita'uu, dhiibbaa dhiigaa, fi dhukkuba sukkaarii ulfaa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Dhukkubni sukkaarii ulfaa (Gestational Diabetes) maalii?",
+        "answer": "Dhukkubni sukkaarii ulfaa, yeroo ulfa qofaatti dhiigni sukkaarii olka'uu dha. Yeroo baay'ee ji'oota ulfaa kanneen giddu galeessaa yookaan dhuma irratti mul'ata. Yeroo baay'ee daa'imi erga dhalatee booda ni bada, haa ta'u malee, booda irratti gosa kaansarii 2 (dhukkuba sukkaarii) itti saaxilamumaa ni guddisa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Summaa'uu ulfaa (Preeclampsia) maalii?",
+        "answer": "Summaa'uun ulfaa, yeroo ulfaa torbaan 20 booda ykn yaddaddhiheen daa'imi erga dhalatee booda dhiibbaan dhiigaa olka'uu fi fincaan keessatti pirootiinii argamuu ykn qaamni biroo rakkoo qabaachuu isaa agarsiisu dha. Yeroo cimaa ta'u, haadhaafii daa'imafis balaa geessisuu danda'a.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Mallattooleen summaa'uu ulfaa maal fa'i?",
+        "answer": "Dhiibbaan dhiigaa olkaa'uu, fincaan keessatti pirootiinii argamuu, harka, fuula, fi naannawa ijaa dhiita'uu, sardamsiisaan ulfaatina dabaluu, mataa cinaa jabaa, rakkoo argu (ifaan dukkanaa'uu ykn hambisuu argu), naannawa gatiroo jala dhukkubsachuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Eegumsi ulfaa duraa (Antenatal Care) maaliif barbaachisa?",
+        "answer": "Fayyaa haadhaa fi daa'imaa yeroo hunda to'achuuf, rakkoo fayyaa kam iyyuu yeroo dheeraa dura adda baasuuf, talaallii barbaachisaa ta'ef kennuuf, waa'ee nyaataa fi ulfaa gorsa kennuuf, fi dhalootni nagayaan akka raawwatamu karoorfachuuf.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yeroo ulfaa nyaanni akkamii nyaachuun ni gorfama?",
+        "answer": "Kuduraalee fi fuduraalee halluu gara garaa qaban, midhaan guutuu, mi'ee, pirootiinii (foon, lukkuu, qurxummii, hanqaaquu), aannaniifi waan aannan irraa tolfaman, faayitaaminiifi albuudni itti baay'atan nyaachuun ni gorfama. Keessattuu fooliik asiidii, sibiila, kaalsiyeemii qaban barbaachisoo dha.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yeroo ulfaa nyaanni akkamii hir'isuu yookaan fagoo dhiibuu qabna?",
+        "answer": "Foonii fi qurxummii dheedhii ykn bilchaate hin taane, aannanii fi aybana pasteraayizii hin taane, hanqaaquu bilcheeffame hin taane, kaafeeinii baay'inaan (buna, shaayii), alkoolii, tamboo, fi qurxummii meerkurii baay'ate qaban (fakkeenyaaf, shark, qurxummii goraadee) hir'isuu yookaan fagoo dhiibuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Dhukkuba fistulaa akkamitti ittisuun danda'ama?",
+        "answer": "Yeroo dhalachuu tursiisuu (keessattuu umurii kudhanii keessa ulfa ta'uu dhorka), eegumsi ulfaa duraa yeroo hunda hordofuu, daa'ima bakka fayyaa keessatti nama leenjifameen dhalchuu, yeroo garmaanlee rakkisaa ta'u baqaqsaanii yeroon raawwachuu, fi tajaajilli dhimsa (da'umsa) tirootaa dhiyaachuu isaa mirkaneessuun.",
+        "category": "fistula"
+    },
+    {
+        "question": "Baqaqsaanii fistulaa eessa argachuu danda'ama?",
+        "answer": "Itoophiyaa keessatti, hospitaalota fi wirtuuwwan fistulaa adda ta'an keessatti argachuu danda'a. Beekamoo ta'an keessaa, Hospitaala Fistulaa Finfinnee, Wiirtuu Fistulaa Baahir Daar, Wiirtuu Fistulaa Maqalee, fi hospitaaloonni shariiki Yem Faawundeeshinii dha.",
+        "category": "fistula"
+    },
+    {
+        "question": "Yoo fistulliin na mudate, namni tokko iyyuu akka hin beekneef, iccitiidhaan gara hospitaalaa deemuu nan danda'aa?",
+        "answer": "Eeyyeen, yaalli fistulaa iccitiin fi kabajaan kan kenname dha. Wirtuuwwan addaa keessatti, qaanni kun dhalaan qofa kan yaalamu yoo ta'u, eenyummaa kee hin ibsin yaala argachuu dandeessa.",
+        "category": "fistula"
+    },
+    {
+        "question": "Baqaqsaanii fistulaa sa'a meeqa fudhata?",
+        "answer": "Baqaqsaanii fistulaa, akka guddinaafi xaxamaa fi wal-xaxiinsa fistullaatti, sa'aatii 1 hanga 3 fudhachuu danda'a. Baqaqsaanii booda, fayyuuf jecha guyyoota 10 hanga 14f hospitaala keessa taa'uun barbaachisaa ta'uu danda'a.",
+        "category": "fistula"
+    },
+    {
+        "question": "Baqaqsaanii fistulaa gatii meeqa?",
+        "answer": "Itoophiyaa keessa jiran wirtuuwwan yaalaa keessatti, baqaqsaanii fistulaa yeroo baay'ee tola yookaan baasii xiqqaadhaan raawwatama. Hospitaalota akka Hospitaala Fistulaa Finfinneetti, tajaajilli kun gargaarsa maallaqaatiin dhukkubsattootaaf tola kenname.",
+        "category": "fistula"
+    },
+    {
+        "question": "Booda baqaqsaanii fistulaa, ammas ulfa ta'uu nan danda'aa?",
+        "answer": "Eeyyeen, dubartoonni hedduun baqaqsaanii fistulaa booda milkaa'inaan ulfa ta'uu fi dhalchuu danda'u. Haa ta'u malee, ulfa itaanaa keessa baqaqsaanii (qarqara dhagna citaa) barbaachisaa ta'uu waan danda'uuf, doktora wajjin mari'achuun barbaachisa.",
+        "category": "fistula"
+    },
+    {
+        "question": "Rakkinni hawaasummaa dhukkubsattoota fistulaa mudatu maalii?",
+        "answer": "Dhukkubsattoonni fistulaa hedduun sababa fincaanii fi udaan yaddaddhabdee dhangala'uutiin hawaasa irraa adda baafamu, dhiirri isaanii isaan dhiisa, maatii biratti tuffatamu, gaddi cimaa qabu, akkasumas foolii gadhee waan jiruuf hojii argachuu fi hawaasa keessa socho'uu dadhabu.",
+        "category": "fistula"
+    },
+    {
+        "question": "Fistulliin dhukkuba qabsiisaa (daddarbaa) ni dhaa?",
+        "answer": "Lakkii, fistulliin quunnamtii saalaatiin, tuquu fi quunnamtii namaan ykn karaa biraatiin namarraa namaatti daddarbu miti. Dhukkuba qabsiisaa miti. Sababa garmaalee rakkisaatiin qaama irratti ga'ee miidhaa qofa.",
+        "category": "fistula"
+    },
+    {
+        "question": "Dulloomuun (Menopause) maalii?",
+        "answer": "Dulloomuun yeroo laguu (urjii) yeroo baraa dhaabbachuudha, kunis dandeettiin dubartii ittiin daa'ima dhaltu xumuramuu agarsiisa. Dubartiin tokko waggaa 12 walitti aansuun yeroo laguu (urjii) yoo argite, dulloomuu geeddarte jechuu dha. Yeroo baay'ee umurii 45-55 gidduutti argama.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Mallattooleen dulloomuu maal fa'i?",
+        "answer": "Dhangala'an (urjii) yeroo isaa eeguu dhabuu, ho'a fidu (hot flashes), halkan dafquu, rakkoo hirribaa, amala jijjiiramuu, ujummoo dhalaa goguu, fedhii saalaa hir'achuu, yaadachuu dadhabuu, fi ulfaatina dabaluu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Mallattoolee dulloomuu salphisuu maal gochuun danda'ama?",
+        "answer": "Sochii qaamaa yeroo hunda gochuu, nyaata fayyaa qabeessa ta'e nyaachuu, hirriba ga'aa argachuu, yaaddoo hir'isuu, kaafeeinii fi alkoolii hir'isuu, tamboo awwaarsuu, fi yoo barbaachise, yaala hormoonii ykn qorichoota biroo doktoriin ajaje fudhachuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Kaansarri marfaa (Cervical Cancer) maalii?",
+        "answer": "Kaansarri marfaa, marfaa (seeriviiksii) irratti uumamu dha. Yeroo baay'ee sababa vaayirasii paapiilomaa namatti (HIV) tiin kan dhufu dha. Vaayirasiin kun quunnamtii saalaatiin daddarba.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Kaansara marfaa akkamitti ittisuun danda'ama?",
+        "answer": "Talaallii HIV fudhachuu, qorannaan marfaa yeroo hunda (Pap smear) gochuu, qulqullina eeguu, tamboo awwaarsuu, kondomii fayyadamuu, fi qunnamtii saalaa nama baay'ee waliin godhamu irraa fagaachuun.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Mallattooleen kaansara marfaa maal fa'i?",
+        "answer": "Yeroo laguu ala dhiigni dhufuu, booda quunnamtii saalaa dhiigni dhufuu, booda dulloomuu dhiigni dhufuu, dhangala'aan ujumee dhalaa kan baramee miti, garaan gadii keessatti dhukkubsachuu yookaan rakkachuu, yeroo quunnamtii saalaa dhukkubsachuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Dhiibbaan dhiigaa olkaa'aan yeroo ulfaa maaliif balaa?",
+        "answer": "Dhiibbaan dhiigaa olkaa'aan, haadha fi daa'imaf balaa geessisuu danda'a. Haadhaaf: summaa'uu ulfaa (preeclampsia), rakkoo kalee, lafeensa onnee (dhukkuba onnee), fi dhiigni sammuu keessatti dhangala'uu. Daa'imaf immoo: guddinni isaa gadhee ta'uu, yeroo hin guutin dhalachuu, fi ulfaatinni isaa gad aantuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Lallabuu fi hoqisuu (dhukkuba ganamaa) yeroo ulfaa akkamitti salphisuu danda'ama?",
+        "answer": "Yaddaddhabdee xiqqoo gochaa nyaachuu, ganama yoo hin ka'in dura bisaqiltii (biskutii) yookaan daabboo goggogaa nyaachuu, nyaata mi'eessaan baay'ate fagoo dhiibuu, bishaan ga'aa dhuguu, foolii cimaa irraa fagaachuu, zinjibilii fayyadamuu, fi boqonnaa ga'aa fudhachuu. Yoo cimaate, doktora gaafachuun barbaachisa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Baqaqsaanii (qarqara dhagna citaa) yoom barbaachisa?",
+        "answer": "Garmaalee dheeraa yookaan rakkisaa ta'e, daa'imi iddoo isaa jijjiiree yoo argame (miilli isaa gadi), rakkoo iddoo biqiltuu (plasenta previa), dhiibbaan dhiigaa haadhaa olkaa'ee, ulfa dhamaa yookaan sadii, rakkoon rukuttaa onnee daa'imaa jiraachuun, fi duraan baqaqsaanii godhamee.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Gaddi booda daa'imaa dhufu (Postpartum Depression) maalii?",
+        "answer": "Gaddi booda daa'imaa dhufu, torbanoota yookaan ji'oota daa'imi erga dhalatee booda dhufuu danda'u rakkoo sammuu cimaa dha. Gaddi cimaa, yaaddoo, dadhabbii, hirriba dhabuu, fedhii nyaataa dhabuu, fi daa'ima kunuunsuu fedhii dhabuu kanneen dabalata.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Harmaa hoosisuun haadha fi daa'imaf bu'aa maalii qaba?",
+        "answer": "Daa'imaf: wantoota barbaachisoo ta'an kenna, dhabbataa fi amansiisaa cimaa ta'e namaaf kenna, dhukkuba irraa ni eega, sammuu guddinaaf ni gargaara. Haadhaaf: booda daa'imaa marfaan akka duraatti deebi'u ni gargaara, ulfaatina hir'isuuf ni gargaara, kaansara harmaa fi marfaa irraa ni eega, daa'ima wajjin walitti dhufeenya cimaa ta'e uuma.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Dhiigni booda daa'imaa dhangala'u (PPH) maalii? ",
+        "answer": "Dhiigni booda daa'imaa dhangala'u, daa'imi erga dhalatee booda dhiigni mililiitira 500 yookaan ol ta'e dhangala'uu dha. Kun balaa jireenyaaf geessisuu danda'u yoo ta'u, yaddaddhabdee xiyyeeffannaa yaalaa barbaachisa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Sababoonni dhiigni booda daa'imaa dhangala'uu maal fa'i?",
+        "answer": "Marfaan utuu hin funeeffatin hafuu, marfaan utuu hin funeeffatin hafuu, marfaan ykn ujumee dhalaa baqaqsuu, rakkoo dhiigni itti cuuphuu (dhiigni dhangala'aa isaa dhaabuu), fi garmaalee dheeraa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Dhiita'uu (garaa dhukkubsachuu) yeroo ulfaa akkamitti ittisuun danda'ama?",
+        "answer": "Bishaan ga'aa dhuguu (xiqqaatti kubbaayyaa 8-10), nyaata faayibarii qabu nyaachuu (kuduraa, fuduraa, midhaan guutuu), sochii qaamaa yeroo hunda gochuu, fi yeroo fincaanuu dhagahamu osoo hin turiin mana fincaanii seenuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yeroo hin guutin dhalachuun (Preterm Birth) maalii?",
+        "answer": "Yeroo hin guutin dhalachuun jechuun daa'imi torbaan ulfaa 37 dura dhalachuu dha. Kun daa'imaf rakkoo hargansuu, rakkoo nyaata bullaa'umsaa, fi rakkoolee fayyaa biroo fiduu danda'a.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yeroo hin guutin dhalachuu ittisuuf maal gochuu danda'ama?",
+        "answer": "Eegumsa ulfaa duraa yeroo hunda hordofuu, nyaata fayyaa qabeessa ta'e nyaachuu, tamboo fi alkoolii fagoo dhiibuu, dhukkuba sukkaarii fi dhiibbaa dhiigaa to'achuu, dhukkuba qabsiisaa qoricha fayyadamuun yeroo dheeraa dura yaaluu, fi yoo marfaan dadhabaa ta'e baqaqsaanii gochuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Booda kaansara harmaa yaaluu, jireenyi idileetti jiraachuun ni danda'amaa?",
+        "answer": "Eeyyeen, dubartoonni hedduun booda kaansara harmaa yaaluu, jireenya guutuu fi bu'aa qabeessa ta'e jiraachuu danda'u. Haa ta'u malee, to'annoo yeroo hunda gochuun, jireenya fayyaa qabeessa ta'e jiraachuun, fi yoo barbaachise garee deeggarsa keessa seenuun ni gorfama.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Kaansara harmaa yeroo dheeraa dura adda baafachuun maaliif barbaachisa?",
+        "answer": "Kaansara harmaa yeroo dheeraa dura adda baafachuun, milkaa'ina yaalaaf iddoo guddaa qaba. Yeroo dheeraa dura argame, yaalli salphaa, xiqqaa, fi milkaa'iinsi isaa ol'aanaa ta'a. Yoo sadarkaa ol'aanaa gahe booda adda baafame, yaalli rakkisaa fi baasii qabuu qofa osoo hin taane, milkaa'iinsi isaas xiqqaadha.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Gurdaan harmaa hundinuu kaansaraa?",
+        "answer": "Lakkii. Gurdaa harmaa keessatti uumaman keessaa hedduun (baay'inni) kaansarii miti (benign). Haa ta'u malee, gurdaan ykn jijjiiramni haaraan kam iyyuu yeroo mul'atu, doktora addaatiin dhaqabuu qaba.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Qorichni ittisa ulfaa (pill) kaansara harmaa fiduu danda'aa?",
+        "answer": "Qorichi ittisa ulfaa fayyadamuu, xiqqaan saaxilamummaa kaansara harmaa dabaluu akka danda'u qorannoonni agarsiisu. Haa ta'u malee, balaan kun erga qorichi dhaabbatee booda suuta suutaan ni bada. Qoricha ittisa ulfaa jalqabuun dura, bu'aa fi miidhaa isaa waa'ee doktora kee waliin mari'achuun barbaachisa.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Seenyi maatii kaansara harmaa yoo hin jiraanne, amma ta'ee kaansara harmaa na mudachuu danda'aa?",
+        "answer": "Eeyyeen, dhukkubsattoota kaansara harmaa hedduun (hanga 85-90%) seenya maatii dhukkuba kanaa hin qaban. Isaan kun dhaalamanii kan dhufan miti. Kanaaf, seenya maatii yoo hin jiraatelle, qorannaa yeroo hunda gochuun fi of eeggannoon godhamuu qaba.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Booda yaala kaansara harmaa, rifeensi ammas ni biqilaa?",
+        "answer": "Eeyyeen, yeroo keemoo godhamu rifeensi baqachuun (harca'uu) miidhaa cinaa beekamaa dha. Haa ta'u malee, erga yaalli xumuramee booda rifeensi ammas ni biqila. Yeroo tokko tokko halluun ykn foormiinsi isaa jijjiiramuu danda'a.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Booda baqaqsaanii fistulaa to'annoon (hordoffiin) akkamii barbaachisa?",
+        "answer": "Booda baqaqsaanii, yeroo murtaa'ef hospitaala keessa taa'uun, madaa qulqulluu qabachuun, torbanoota muraasaaf hojii ulfaataa hojjechuu dhiisuun, quunnamtii saalaa dhiisuun, yeroo murtaa'ef ittisa ulfaa fayyadamuu, fi yeroo murtaa'etti doktora hordofsiifachuun.",
+        "category": "fistula"
+    },
+    {
+        "question": "Dhukkubni fistulaa sammuu irratti dhiibbaa akkamii qaba?",
+        "answer": "Dhukkubsattoonni fistulaa sababa adda baafamuufi tuffatamuutiin, gaddi cimaa, of tuffachuu, yaaddoo, fi of qusachuu isaan mudata. Kanaaf, yaala qaamaa wajjin deeggarsi sammuu (sammuu) barbaachisa.",
+        "category": "fistula"
+    },
+    {
+        "question": "Dubartoota dhukkubni fistulaa qabaniif gareen deeggarsaa jiraa?",
+        "answer": "Eeyyeen, wiirtuuwwan yaala fistulaa adda addaa keessatti, dubartoonni duraan fayyee waa'ee isaanii himan garee deeggarsa qabu. Gareen kun, dhukkubsattoota haaraa jajjabeessuu, muuxannoo isaanii qooduu, fi booda yaalaa gara hawaasaatti akka deebi'aniif gargaaru.",
+        "category": "fistula"
+    },
+    {
+        "question": "Dubartiin fistulliin qabamte, booda baqaqsaanii quunnamtii saalaa idilee gochuu dandeessaa?",
+        "answer": "Eeyyeen, erga yaalli milkaa'aa ta'ee booda, dubartoonni hedduun quunnamtii saalaa idilee gochuu danda'u. Haa ta'u malee, doktoriin hanga hayyamuutti eeguun barbaachisa (yeroo amalaan, ji'a 3-6).",
+        "category": "fistula"
+    },
+    {
+        "question": "Baqaqsaanii fistulaa jalqabaa yoo hin milkoofne, carraan biraa ni jiraa?",
+        "answer": "Eeyyeen, baqaqsaanii jalqabaa yoo hin milkoofne, lammaffaa yookaan sadaffaa gochuun ni danda'ama. Fistulloonni xaxamaa ta'an tokko tokko baqaqsaanii tokkoo ol barbaaduu danda'u.",
+        "category": "fistula"
+    },
+    {
+        "question": "Yeroo ulfaa talaallii akkamii fudhachuun ni gorfama?",
+        "answer": "Yeroo ulfaa, talaalliin Teetanasi (Tetanus Toxoid) baay'ee barbaachisa. Talaalliin kun, haadhaa fi daa'ima dhukkuba Teetanasi irraa ni eega. Akkasumas, talaalliin infuleenzaa fi talaalliin kaansaraa (COVID-19) fudhachuun ni danda'ama.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yeroo ulfaa qoricha fudhachuu nan danda'aa?",
+        "answer": "Qoricha kam iyyuu, doktora ykn ogeessa fayyaa wajjin osoo hin mari'in fudhachuu hin qabdu. Qorichi tokko tokko daa'ima irratti balaa geessisuu danda'a. Haa ta'u malee, qorichi barbaachisaa ta'e, to'annoo doktoraa jalatti fudhachuu ni danda'ama.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yeroo ulfaa sochii qaamaa gochuun ni gorfamaa?",
+        "answer": "Eeyyeen, sochii qaamaa salphaa fi giddu galeessaa (akka deemuu, bishaan keessa daakuu, shaakallii ulfaa addaa) yeroo ulfaa faayidaa qaba. Sochii ulfaataa, ispoortii kufuu balaa qaban, fi shaakallii dugda irratti raawwatamu (ji'a jalqabaa booda) fagoo dhiibuun barbaachisa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yeroo ulfaa ulfaatinni meeqa dabaluun idilee dha?",
+        "answer": "Kun akka ulfaatina duraanii keetti kan jijjiiramu dha. Walumaagalatti, ulfaatina idilee qabaniif kg 11-16, ulfaatina xiqqoo qabaniif kg 13-18, ulfaatina guddaa qabaniif immoo kg 7-11 dabaluun ni gorfama. Yoo ulfi dhamaa ta'e, sana dabaluun ulfaatina dabaluun barbaachisaa ta'a.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Garmaanlee sobaa (Braxton Hicks) yeroo ulfaa maalii?",
+        "answer": "Garmaanleen sobaa, ji'oota ulfaa kanneen gidduu fi dhuma irratti marfaan yeroo yeroon utubamu dha. Isaan kun 'garmaanlee sobaa' jedhamu; sababiinsaas garmaanlee dhugaa fakkaachuu danda'u garuu marfaan banamaa akka ta'u hin godhanu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Garmaanlee dhugaa fi garmaanlee sobaa akkamitti adda baasuu danda'ama?",
+        "answer": "Garmaanleen dhugaa: yeroo isaa wal qixa qaba, yeroo daboluu dhama'aa (cimaa) deema, fi iddoo jijjiiruun hin salphatu. Garmaanleen sobaa immoo: yeroo isaa wal qixa hin qabu, hin cimu, fi iddoo jijjiiruun salphata yookaan bada.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Mallattooleen dhimsa (da'umsa) maal fa'i?",
+        "answer": "Marfaan yeroo hunda utubamu (garmaanlee), oonni (bishaan daa'imaa) dhangala'uu, dhiigni dhangala'uu (dhiiga xiqqaa yookaan dhangala'aa), fi sochiin daa'imaa hir'achuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yoom gara hospitaalaa deemuu qaba?",
+        "answer": "Bishaan (oonni) yoo dhangala'e, dhiigni yoo dhangala'e, garmaanleen kee yeroo hunda yoo dhufuu jalqabe (diiqaa 10 hunda), sochiin daa'imaa yoo xiqqaate, mataan yoo cimaate, rakkoon argu yoo mudate, ykn garaan kee gubbaa cinaa yoo cimaateen, yaddaddhabdee gara hospitaalaa deemuu qabda.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Booda daa'imaa sa'a meeqa hospitaala keessa taa'uun barbaachisa?",
+        "answer": "Dhaloota idileetti, sa'aatii 24-44f taa'uun barbaachisa. Yoo baqaqsaanii ta'e, guyyaa 3-5f taa'uun barbaachisa. Haa ta'u malee, kun akka fayyaa haadhaa fi daa'imaa irratti hundaa'a.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Booda daa'imaa to'annoon (hordoffiin) akkamii barbaachisa?",
+        "answer": "Booda daa'imaa torbanoota 6 booda, hordoffiin booda daa'imaa gochuun barbaachisa. Yeroo kana, marfaan akka deebi'u, ulfaatina, dhiibbaa dhiigaa, dhiigni hir'achuu (anaamiyaa), fi fayyaa harmaa qorachuun. Akkasumas waa'ee ittisa ulfaa fi talaallii daa'imaa gorsi kenname.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yoo harmaa hoosisuu jalqabe, ammas ulfa ta'uu nan danda'aa?",
+        "answer": "Eeyyeen, yeroo harmaa hoosisuttiyyuu ulfa ta'uu danda'a. Harmaan hoosisuun ulfaa irraa eeguuf xiqqaan gargaaru danda'u iyyuu, tooftaa ittisa ulfaa amansiisaa ta'e miti. Kanaaf, ulfa ta'uu yoo hin feene, ittisa ulfaa fayyadamuu qabda.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Ofiif ofii harmaa qorachuun yoom jalqabuu qaba?",
+        "answer": "Dubartoonni umurii waggaa 20 irraa eegalee, ofiif ofii qorachuu jalqabuu qabu. Kana ji'a hunda, yeroo laguu booda gochuun ni gorfama. Warri dulloomte immoo, guyyaa murtaa'aa keessa ji'a hunda gochuu dandeessu.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Kaansarri harmaa fi faybiroodenoomiini (fibroadenoma) akkamitti adda baafamu?",
+        "answer": "Faybiroodenoomiiniin kaansarii hin taane (benign) yoo ta'u, yeroo baay'ee laafaa, socho'uu danda'u, fi dhukkuba hin qabu. Kaansarri harmaa garuu, akka kattaa jabaa, tishuu wabii wajjin qabatee jiru, fi bifa hin qixxaa'ne ta'uu danda'a. Haa ta'u malee, addaan baafamni sirriin qorannaan (alcharaasawundii, baayoopisii) qofa.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Kaansarri harmaa dhaalamanii ni dhaalamuu?",
+        "answer": "Gosoonni kaansara harmaa tokko tokko dhaalamanii dhaalamuu danda'u. Keessattuu, jiinoonni BRCA1 fi BRCA2 yoo jiraatan, saaxilamummaan cimaadha. Haa ta'u malee, baay'inni kaansara harmaa (hanga 85-90%) dhaalamanii hin dhaalamu.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Booda yaala kaansara harmaa, nyaanni akkamii nyaachuun ni gorfama?",
+        "answer": "Kuduraanii fi fuduraan itti baay'ate, midhaan guutuu, mi'ee, fi pirootiinii fayyaa qabeessaa (qurxummii, lukkuu, baagelaa) itti baay'ate nyaachuun ni gorfama. Foon diimaa, nyaata bilcheeffame, nyaata sukkaarri itti baay'ate, fi alkoolii hir'isuun barbaachisa.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Booda yaala kaansara harmaa, sochii qaamaa gochuun ni gorfamaa?",
+        "answer": "Eeyyeen, sochii qaamaa yeroo hunda gochuun, erga yaalaa booda haala fayyuu keessatti baay'ee barbaachisa. Dadhabbii hir'isuuf, liffiidimaa (harka dhiita'uu) balaasaa hir'isuuf, ulfaatina to'achuuf, fi amala fooyyessuuf ni gargaara.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Talaalliin kaansara marfaa (talaalliin HIV) eenyu fudhachuu qaba?",
+        "answer": "Talaalliin HIV, jalqaba dubartii fi dhiira umuriin isaanii waggaa 9-14 ta'eef ni gorfama. Hanga umurii waggaa 26tti, warri hin talaallamneef kennamuu danda'a. Talaalliin kun, kaansara marfaa fi kaansaroota HIV wajjin walqabatan biroo irraa eeguuf ni gargaara.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Qorannaan kaansara marfaa (Pap smear) yoom jalqabuu qaba?",
+        "answer": "Dubartoonni umurii waggaa 21 irraa eegalee, qorannaa Pap smear gochuu jalqabuu qabu. Umurii 21-29 gidduutti, waggaa 3tti al tokko, umurii 30-65 gidduutti immoo, waggaa 5tti al tokko (qorannaa HIV wajjin) gochuun ni gorfama.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yaalli kaansara marfaa hangam bu'aa qaba?",
+        "answer": "Kaansarri marfaa yeroo dheeraa dura argame, milkaa'iinsi yaalaa ol'aanaadha. Sadarkaa jalqabaa irratti yoo argame, hanga 90-95% guutummaatti fayyuu danda'u. Kunis, qorannaan yeroo hunda gochuun maaliif akka barbaachisu agarsiisa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yeroo ulfaa quunnamtii saalaa gochuun nageenya qaba?",
+        "answer": "Eeyyeen, yeroo baay'ee ulfi nageenya qabeessa yoo ta'e fi rakkoon wal xaxaan (akka dhiigni dhangala'uu, bishaan dhangala'uu, rakkoo iddoo biqiltuu) yoo hin jiraanne, gochuun nageenya qaba. Haa ta'u malee, iddoo mijaa'aa ta'e filachuun, yoo rakkachaan mudate immoo dhaabuun barbaachisa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yeroo ulfaa yaalli ilkaanii gochuun ni danda'amaa?",
+        "answer": "Eeyyeen, yaalli ilkaanii barbaachisaa ta'e, yeroo ulfaa gochuun ni danda'ama. Haa ta'u malee, doktora kee ulfa ta'uu kee himuun barbaachisa. Xaayiin reyi yoo barbaachise, eegumsi godhama. Yaalli ilkaanii godhamuuf yeroo filatamaan ji'a 4-6 (sadarkaa lammaffaa) dha.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Dhukkubni ujummoo fincaanii yeroo ulfaa maaliif yeroo baay'ee mul'ata?",
+        "answer": "Yeroo ulfaa, jijjiiramni hormoonii fi marfaan babal'achuun fincaan qabduu (bladder) irratti dhiibbaa uumuun, saaxilamummaa dhukkuba ujummoo fincaanii ni dabala. Yoo yaala hin arganne, dhukkuba kaleetti geessisuu waan danda'uuf, yaddaddhabdee yaala barbaachisa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Mallattooleen garmaanlee yeroo hin guutin maal fa'i?",
+        "answer": "Torbaan 37 dura, marfaan yeroo hunda utubamu, garaan gadii irratti dhiibbaan dhaga'amuu, garaan suuta utubamu (cittuu), dhukkubni akka dhukkuba laguu dhaga'amuu, bishaan ykn dhiigni dhangala'uu, dhangala'aan ujummee dhalaa dabaluu ykn jijjiiramuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yoo garmaanleen yeroo hin guutin ta'uu shakkitan, maal gochuu qabda?",
+        "answer": "Yaddaddhabdee gara hospitaalaa deemuu ykn ogeessa fayyaa bilbiluun qabda. Bishaan dhugaatii, cinaacha bitaarratti ciisaa boqonnaa fudhachuu, fi yeroo garmaanlee too'achuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Ulfi dhamaa (dachaa) hordoffii addaa ni barbaadaa?",
+        "answer": "Eeyyeen, ulfi dhamaa, ulfa tokkichaa ol hordoffii barbaada. Yeroo baay'ee eegumsi ulfaa duraa, qorannaan alcharaasawundii, guddinni daa'imaa fi fayyaan haadhaa (dhiibbaa dhiigaa, dhukkuba sukkaarii) to'achuun, fi yeroo hin guutin dhalachuu ittisuun barbaachisa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Booda baqaqsaanii fistulaa, guutummaatti fayyuuf yoo meeqa na fudhata?",
+        "answer": "Guutummaatti fayyuun, akka guddinaa fi xaxamaa baqaqsaaniitti, ji'a 3-6 fudhachuu danda'a. Ergama hospitaalaa booda, torbanoota 6-8 jalqabaaf, hojii ulfaataa hojjechuu, ulfaataa baachuu, fi quunnamtii saalaa dhiisuun barbaachisa.",
+        "category": "fistula"
+    },
+    {
+        "question": "Fistulliin dhukkuba daa'ima dhalchuu qofaadhaa?",
+        "answer": "Dhukkubni fistulaa baay'inaan garmaalee rakkisaa wajjin walqabatu iyyuu, sababoota biroonis dhufuu danda'a. Isaanis: baqaqsaanii marfaa, miidhaan qaama saalaa irratti ga'u, kaansarrii, yaalli adugguu (radiation), fi dhukkuboonni qabsiisaa tokko tokko.",
+        "category": "fistula"
+    },
+    {
+        "question": "Fistula yaaluuf karoorri biroo ni jiraa?",
+        "answer": "Yaalli ijoon baqaqsaanii dha. Haa ta'u malee, fistulloonni xiqqaawwan, yeroo tokko tokko kateteera ujummoo fincaanii keessa kaa'uun fi boqonnaa ga'aa kennuun fayyuu danda'u. Haa ta'u malee, karoorri kun kan hojjetu fistulloonni baay'ee xiqqaa ta'an irratti qofa.",
+        "category": "fistula"
+    },
+    {
+        "question": "Dubartiin fistulliin qabamte, booda yaalaa daa'ima dhalchuu dandeessaa?",
+        "answer": "Eeyyeen, erga yaalli milkaa'aa ta'ee booda, dubartoonni hedduun daa'ima dhalchuu danda'u. Haa ta'u malee, ulfa itaanaa keessa baqaqsaanii (qarqara dhagna citaa) barbaachisaa ta'uu danda'a. Doktora wajjin mari'achuun barbaachisa.",
+        "category": "fistula"
+    },
+    {
+        "question": "Fistulliin dhukkuba yeroo dheeraa dura beekamuu danda'aa?",
+        "answer": "Fistulliin yeroo baay'ee yaddaddhabdee hin dhufu; garuu yeroo garmaaleen dheeratu, carraan isaa ol'aanaadha. Garmaalee dheeraa (keessattuu sa'aatii 24 ol), sochiin daa'imaa hir'achuu, fi fincaanuu dhowwatamuu dhabuun mallattoo fistulaa ta'uu danda'a.",
+        "category": "fistula"
+    },
+    {
+        "question": "Yaalli kaansara harmaa dandeettii dhalchuu irratti dhiibbaa qabaa?",
+        "answer": "Yaalli kaansara harmaa tokko tokko (keessattuu keemoo) dandeettii dhalchuu irratti dhiibbaa geessisuu danda'a. Kanaaf, yaala duraa, fedhii dhalchuu waa'ee keetii waliin mari'achuun barbaachisa. Akka hanqaaquu qoritsuu (freezing eggs) filannoon jiraachuu danda'a.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Booda yaala kaansara harmaa, ammas deebi'ee dhufuu danda'aa?",
+        "answer": "Eeyyeen, kaansarri harmaa booda yaalaa ammas deebi'ee dhufuu danda'a. Kanaaf, hordoffiin yeroo hunda gochuun baay'ee barbaachisa. Doktorri kee yeroo meeqa akka hordoffii gootuu fi qorannoo akkamii akka gootuu sitti hima.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Kaansara harmaa ittisuuf harmaan hoosisuun ni gargaaraa?",
+        "answer": "Eeyyeen, qorannoonni agarsiisan akka harmaan hoosisuun, keessattuu yeroo dheeraaf (waggaa 1 ol), saaxilamummaa kaansara harmaa hir'isa. Kunis, harmaan hoosisuun sadarkaa hormoonii jijjiiruun fi tishuu harmaa irratti jijjiirama fiduun waan ta'u danda'uuf.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Kaansara harmaa mirkaneessuuf baayoopisiin (biopsy) barbaachisaa?",
+        "answer": "Eeyyeen, baayoopisiin kaansara harmaa mirkaneessuuf karaan tokkicha dha. Qorannoonni biroo (akka mammogram, alcharaasawundii) yoo gurdaa argus, kaansarii ta'uu fi ta'uu dhabuu isaa mirkaneessuuf, tishuu gurdaa irraa fudhatame qorachuun barbaachisa.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Qorannaan kaansara marfaa gochuun ni laalessaa?",
+        "answer": "Qorannaan Pap smear yeroo baay'ee rakkachuu qofa, garuu dhukkuba cimaa hin qabu. Qorannichi diiqii muraasa keessatti xumurama. Dubartoonni tokko tokko hoqqisuu ykn utubamuu xiqqaa dhaga'uu danda'u.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Haati ulfaa HIV qabdu, daa'ima harmaa hoosisuun vaayirasiin daddarbuu dandeessaa?",
+        "answer": "Eeyyeen, HIV aannan harmaatiin daddarbuu danda'a. Haadholiin HIV qaban, daa'ima aannan hodhuu irra, nyaata bakka bu'aa nageenya qabeessaa (aannan guutuu ykn foormulaa) nyaachisuun ni gorfama. Haa ta'u malee, yaala ARV fudhachuun fi hanga vaayirasii to'achuun balaasaa hir'isuu danda'ama.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yoo hoqisuun (lallabuu) yeroo ulfaa cimaate (Hyperemesis Gravidarum), maal gochuu qabna?",
+        "answer": "Hoqisuun cimaan, yaala hospitaalaa barbaaduu danda'a. Mallattooleen isaa: yaddaddhabdee hoqisuu, ulfaatina hir'achuu, goguu (bishaan dhabuu), fi hangi elektiroolaayitii jijjiiramuu dha. Yaalli isaa, bishaan hidda dhiigaa (IV) kennuu, qoricha hoqisuu ittisu, fi deeggarsa nyaataa ta'a.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Bu'aan qorannaa kaansara marfaa koo yoo idilee hin taane, maal jechuudha?",
+        "answer": "Bu'aan idilee hin taane, tishuun marfaa irratti jijjiiramni hin baramne jiraachuu isaa agarsiisa. Haa ta'u malee, kun waanuma isaatiin kaansaraa jechuudha miti. Baay'inni bu'oota idilee hin taane, jijjiiramoota salphaa dha. Doktorri kee qorannaa dabalataa (kolposkoppii) siif ajajuu danda'a.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Booda kaansara marfaa qabaachuu, ammas daa'ima dhalchuu ni danda'amaa?",
+        "answer": "Kun sadarkaa kaansaraa fi yaala godhamu irratti hundaa'a. Yoo sadarkaa jalqabaa irratti ta'e, yaalli marfaa hin baasne kaansara qofa baasuun ni danda'ama. Haa ta'u malee, akkasii booda carraan dhalchuu akka jiraatu, doktora kee waliin mari'achuun barbaachisa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Dhiigni booda daa'imaa dhangala'u hangam tura?",
+        "answer": "Dhiigni booda daa'imaa dhangala'u (lochia), torbanoota 2-6 turachuu danda'a. Jalqaba diimaa, booda irratti gara daamaa, booraa, fi adii yookaan keelloo jijjiirama. Hanga dhangala'uus suuta suutaan hir'ata.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Dhiigni booda daa'imaa dhangala'u yoom balaa?",
+        "answer": "Mallattooleen armaan gadii yoo mul'atan, yaddaddhabdee doktora argadhu: dhiigni ulfaataan dhangala'uu (sa'aatii hunda paadii tokko guutuu), dhiigaan (curd) guddaan ba'uu, dhiigni guyyaa 4 booda cimachuu, dhangala'aani fi dhiigni foolii gadhee qabaachuu, qandhoo, yookaan garaa cimaa dhukkubsachuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Kaansara harmaa yaaluuf, baqaqsaanii alatti karoorri biroo ni jiraa?",
+        "answer": "Eeyyeen, yaalli kaansara harmaa akka gosaafi sadarkaa kaansaraatti murteeffama. Yaalli: radiyeeshinii, keemoo, yaala hormoonii, yaala kallattiin gara kaansarii taasifamu, fi imunooteraapii.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Kaansarri harmaa qabaachuu koo akkamitti beekuu danda'ama?",
+        "answer": "Kaansara harmaa mirkaneessuun kan danda'amu qorannaa doktoraa qofa. Haa ta'u malee, yoo gurdaan haaraan, bifni harmaa jijjiiramuu, ujummoo harmaa irraa dhangala'aan dhufuu, ykn gogaan harmaa irratti jijjiiramni argame, yaddaddhabdee doktora argadhu.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Gaddi booda daa'imaa dhufu (PPD) gadda idilee (Baby Blues) irraa akkamitti adda baafama?",
+        "answer": "Baby Blues: yeroo baay'ee guyyoota muraasa booda daa'imaa dhufa, guyyoota muraasa qofa tura, mallattoolee salphaa qaba. Gaddi booda daa'imaa dhufu immoo cimaa dha, torbanootaaf yookaan ji'ootaaf tura, jireenya guyyaa guyyaa jeeqa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Gaddi booda daa'imaa dhufu yaalli isaa maalii?",
+        "answer": "Yaalli: gorsa sammuu (terapii), garee deeggarsaa, qoricha gadda ittisu (kan doktoriin ajaje), fi deeggarsa maatii ta'a. Yeroo harmaa hoosisan qoricha fudhachuun yoo barbaachise, doktorri kee qoricha nageenya qabeessa ta'e siif ajaja.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Fincaan keessatti pirootiinii argamuun yeroo ulfaa maal agarsiisa?",
+        "answer": "Yeroo ulfaa fincaan keessatti pirootiinii argamuun, rakkoo kalee ykn summaa'uu ulfaa (preeclampsia) mallattoo ta'uu danda'a. Keessattuu, dhiibbaan dhiigaa olkaa'aa wajjin yoo mul'ate, balaa qaba. Doktorri kee qorannaa fi hordoffii dabalataa siif godha.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Dhiigni hir'achuu (anaamiyaa) yeroo ulfaa maaliif uumama?",
+        "answer": "Dhiigni hir'achuun yeroo ulfaa uumamu, baay'inaan sababa sibiila (birrii) dhabuutiin. Sababiinsaas, haati ulfaa ofiifii fi daa'imaaf dhiiga gahaa oomishuuf, sibiila dabalataa waan barbaadduuf. Sibiilli gahaan yoo hin jiraanne, dhiigni ni hir'ata.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Mallattooleen dhiigni hir'achuu maal fa'i?",
+        "answer": "Dadhabbii, fuulli adeemuu, maraatuu (boqonnaa duuba), miilli ollacha'uu, rukuttiin onnee dabaluu, hargansuun dadhabuu, mataan cinaachuu, fi xiyyeeffachuu dadhabuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Dhiigni hir'achuu akkamitti ittisuun danda'ama?",
+        "answer": "Nyaata sibiilli (birrii) itti baay'ate nyaachuu (foon, lukkuu, qurxummii, baagelaa, shumburaa, kuduraa), faayitaaminiin C qaban (birtukaanii, loomiitii, timaatiimii) sibiila wajjin nyaachuu, fi qoricha sibiilaa doktoriin ajaje fudhachuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Liffiidimaa (Lymphedema) kaansara harmaa qabaniin maalii?",
+        "answer": "Liffiidimaan yeroo baqaqsaanii kaansara harmaa ykn yaala radiyeeshinii booda, qaamoleen liimfii (lymph nodes) baafamanii fi liimfiin sirritti hin dhangala'iniin, harka ykn irree irratti dhiita'u uumamu. Kun rakkoo yeroo dheeraa turaa dha.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Liffiidimaa akkamitti ittisuun danda'ama?",
+        "answer": "Irree baqaqsaanii irratti godhame irratti, dhiibbaa dhiigaa qorachuu, limmoo (needle) waraanuu, ykn dhiiga baafachuu dhiisuun, ulfaataa baachuu dhiisuun, uffata jabaa uffachuu dhiisuun, irree ol kaasanii boqochuun, shaakallii harkaa yeroo hunda gochuun, fi gogaa qulqulluu fi jiidhaa qabeessa ta'ee eeguun.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Baasii yaala kaansara harmaa meeqa?",
+        "answer": "Baasii yaalaa kun, akka gosa yaalaa, iddoo, fi inshooraansii irratti jijjiirama. Itoophiyaa keessa, hospitaalota mootummaa keessatti baasii xiqqaadhaan godhama. Dhaabbileen mootummaa hin taane tokko tokko deeggarsa maallaqaa godhuu danda'u.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Kaansara harmaa yaaluuf qorichi uumamaa (traditional) ni jiraa?",
+        "answer": "Yeroo ammaa qorannoon jiruun, kaansara harmaa guutummaatti yaalu danda'u qorichi uumamaa hin jiru. Qorichoonni uumamaa tokko tokko, yaala idilee wajjin yoo fudhataman, balaa fiduu danda'u. Kanaaf, yaala filannoo kamiyyuu jalqabuun dura, doktora kee waliin mari'achuun barbaachisa.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Qorannaa Pap smear booda, quunnamtii saalaa gochuu nan danda'aa?",
+        "answer": "Eeyyeen, haa ta'u malee, yeroo baay'ee qorannichi erga raawwatamee booda sa'aatii 24-48f dhiisuun ni gorfama. Kun bu'aa qorannaa sirrii ta'e argachuuf.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Miidhaan cinaa talaallii kaansara marfaa (talaallii HIV) maalii?",
+        "answer": "Miidhaan cinaa beekamaan: iddoo limmoon itti waraaname dhukkubsachuu, dhiita'uu, yookaan diimachuu, qandhoo xiqqoo, mataan cinaachuu, dadhabbii, fi lallabuu dha. Miidhaan cinaa cimaa baay'ee hin mul'atu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yeroo ulfaa bishaan meeqa dhuguu qabna?",
+        "answer": "Yeroo ulfaa, guyyaatti kubbaayyaa bishaanii xiqqaatti 8-10 (liitira 2-2.5) dhuguu ni gorfama. Bishaan ga'aa dhuguun, dhukkuba ujummoo fincaanii fi dhiita'uu ittisuuf, akkasumas hanga oonii (bishaan daa'imaa) eeguuf gargaara.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yeroo ulfaa buna dhuguun ni hayyamamaa?",
+        "answer": "Eeyyeen, haa ta'u malee, hanga murtaa'ee. Guyyaatti milligiraamii 200 kaafeeinii (kubbaayyaa xiqqaa 1-2) caalaa darbuu hin qabnu. Kaafeeinii baay'inaan fudhachuun, yeroo hin guutin dhalchuu ykn ulfaatinni daa'imaa gad aantuu ta'uu fiduu danda'a.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yoo fistulliin na mudate, akkamitti gargaarsa argachuu danda'ama?",
+        "answer": "Gara hospitaalaa ykn buufata fayyaa dhunnetti dhaquun, waa'ee tajaajila yaala fistulaa gaafachuu dandeessa. Akkasumas, Hospitaala Fistulaa Finfinnee bilbilaan (011-662-1495) bilbiluu ykn dhaquun dandeessa. Wiirtuunni fistulaa hedduun, dhukkubsattoota geejjibuu fi simachuuf deeggarsa godhu.",
+        "category": "fistula"
+    },
+    {
+        "question": "Dhukkubsattoonni fistulaa deeggarsa sammuu (sammuu) akkamii argatu?",
+        "answer": "Wiirtuuwwan fistulaa keessatti, ogeeyyiin sammuu (sammuu) fi fayyaa hawaasaa, dhukkubsattoota wajjin haasa'anii deeggarsa miiraa godhu. Akkasumas, dubartoonni duraan fayyee waa'ee isaanii himan, dhukkubsattoota haaraa jajjabeessu.",
+        "category": "fistula"
+    },
+    {
+        "question": "Fistula ittisuuf yaaliin godhamu maalii?",
+        "answer": "Dubartoonni umurii isaanii dura akka hin heerumne barsiisuu, eegumsa ulfaa duraa jajjabeessuu, daa'ima bakka fayyaa keessatti ogeeyyiin dhalchuu, tajaajilli dhimsa tirootaa dhiyaachuu isaa mirkaneessuu, fi hawaasni waa'ee sababootaa fi tooftaalee ittisa fistulaa akka baratu gochuun.",
+        "category": "fistula"
+    },
+    {
+        "question": "Booda yaala kaansara harmaa, amalli nyaataa akkamii ta'uu qaba?",
+        "answer": "Kuduraalee fi fuduraalee baay'inaan nyaachuu, midhaan guutuu filachuu, pirootiinii fayyaa qabeessaa (qurxummii, lukkuu, baagelaa) nyaachuu, foon diimaa hir'isuu, nyaata bilcheeffame fagoo dhiibuu, nyaata sukkaarri itti baay'ate hir'isuu, alkoolii hir'isuu yookaan dhiisuu, fi ulfaatina fayyaa qabeessaa eeguu.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Booda yaala kaansara harmaa, sochiin qaamaa hangam gochuun barbaachisa?",
+        "answer": "Torbaanitti xiqqaatti dakiiqaa 150 sochii qaamaa giddu galeessaa (akka deemuu ariifachuu) gochuun ni gorfama. Akkasumas, sochii jabina maashaalee, torbaanitti guyyaa 2 gochuun ni gorfama. Jalqabuun dura, doktora kee waliin mari'achuun barbaachisa.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Yoo kaansarri marfaa na qabe, mallattooleen maal fa'i na mudatu?",
+        "answer": "Kaansarri marfaa sadarkaa jalqabaa irratti mallattoo hin qabaatu. Mallattooleen yoo mul'atan immoo: yeroo laguu ala dhiigni dhufuu, booda quunnamtii saalaa dhiigni dhufuu, booda dulloomuu dhiigni dhufuu, dhangala'aan ujummee dhalaa kan baramee miti, garaan gadii keessatti dhukkubsachuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Kaansara marfaa mirkaneessuuf Kolposkooppii (Colposcopy) maalii?",
+        "answer": "Kolposkooppiin, marfaa, ujummee dhalaa, fi qaama saalaa, meeshaa guddiftuu addaa (kolposkooppii) fayyadamuun xiinxalawaan qorachuudha. Kun kan godhamu, bu'aan Pap smear idilee hin taane yoo ta'etti, tishuuwwan baramoo adda argachuufii yoo barbaachise baayoopisii gochuuf.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Kaansara marfaa yaaluuf baqaqsaanii akkamii ni jiru?",
+        "answer": "Akka sadarkaa kaansaraatti, baqaqsaaniiwwan armaan gadii godhamuu danda'u: Konlaayizeeshinii (tishuu baramee qofa baafachuu), histerektomii salphaa (marfaa fi ujummee marfaa baafachuu), fi histerektomii radikaalaa (marfaa, ujummee marfaa, tishuuwwan naannoo, fi qaamolee liimfii baafachuu).",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Summaa'uu ulfaa (Preeclampsia) qabduuf yaalli akkamii godhama?",
+        "answer": "Yaalli ijoon daa'ima dhalchuudha. Hanga sanaatti, dhiibbaa dhiigaa to'achuuf qorichoota, maagneeziiyemii salfeetii (utubamuu (seizure) ittisuuf), fi hospitaala keessa taa'anii hordoffii cimaa gochuun. Yoo cimaate, daa'imi yeroo hin guutin dhalchuu barbaachisaa ta'uu danda'a.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Summaa'uun ulfaa erga daa'imi dhalatee booda ni badaa?",
+        "answer": "Yeroo baay'ee, summaa'uun ulfaa erga daa'imi dhalatee booda guyyoota yookaan torbanoota muraasa keessatti ni bada. Haa ta'u malee, dubartoonni tokko tokko booda daa'imaa torbanoota keessa dhiibbaa dhiigaa olka'aa qabaachuu danda'u. Kanaaf, booda daa'imaa dhiibbaan dhiigaa to'achuun barbaachisa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Qorichi garmaanlee laaffisu (Epidural) yeroo ulfaa maalii?",
+        "answer": "Ipiduraaliin, yeroo dhimsaatti dhukkuba salphisuf kennamu qoricha lafeessa lafee dugdaa ti. Qorichichi lafeessa lafee dugdaa naannoo isaatti limmoodhaan kenname. Kun, gama gadii qaamaa miiraa balleessa, garuu dammaqinaa fi beekumsa hin balleessu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Ipiduraaliin (Epidural) yeroo ulfaa nageenya qabaa?",
+        "answer": "Ipiduraaliin, yeroo ogeeyyiin muuxannoo qaban kennan, nageenya qaba. Haa ta'u malee, akka sirna yaalaa hundaatti, balaan xiqqaan jira: dhiibbaan dhiigaa gadi bu'uu, mataan cinaachuu cimaa, hoqqisuu, fincaanuu dhowwatamuu dhabuu (qabachuu), fi balaan narviitti ga'u baay'ee dhahatu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Dhukkubni marfaa booda daa'imaa dhufu (Endometritis) maalii?",
+        "answer": "Dhukkubni marfaa booda daa'imaa dhufu, yeroo baay'ee booda baqaqsaanii yookaan garmaalee dheeraa ta'eetti dhufa. Mallattooleen isaa: qandhoo, garaan dhukkubsachuu, dhangala'aan ujummee dhalaa foolii gadhee qabaachuu, fi marfaan guddaa ta'uu. Qoricha baakteeriyaa (antibiotic) barbaada.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Dhukkuba marfaa booda daa'imaa dhufu akkamitti ittisuun danda'ama?",
+        "answer": "Qulqullina eeguu, harka dhiqachuu, madaa akka barbaachisutti kunuunssuu, yoo baqaqsaanii ta'e qoricha akka ajaja doktoraatti fudhachuu, fi mallattooleen dhukkubaa yoo mul'atan yaddaddhabdee doktora argachuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Booda yaala kaansara harmaa, yoo irreen koo dhiite (liffiidimaa) maal gochuu qaba?",
+        "answer": "Yaddaddhabdee doktora kee gaafachuu qabda. Yaalli: shaakallii harkaa addaa, harcaddii (compression sleeve) fayyadamuu, harka lolluu (ogeessa addaatiin), fi gogaa of eeggannoodhaan kunuunssuu.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Booda baqaqsaanii kaansara harmaa, harmaan deebi'ee ijaaramuu (Breast Reconstruction) gochuun ni danda'amaa?",
+        "answer": "Eeyyeen, booda baqaqsaanii kaansara harmaa, baqaqsaanii harmaan deebi'ee ijaaramuu gochuun ni danda'ama. Kun, yeroo baqaqsaaniitti ykn booda irratti raawwatamuu danda'a. Kanaaf, waa'ee filannoo kanaa doktora kee waliin mari'achuu dandeessa.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Booda kaansara marfaa qabaachuu, jireenyi saalaa koo irratti dhiibbaa ni qabaa?",
+        "answer": "Kaansarrii marfaa fi yaalli isaa, jireenya saalaa irratti dhiibbaa geessisuu danda'a. Ujummoon dhalaa goguu, yeroo qunnamtii saalaa dhukkubsachuu, fedhiin saalaa hir'achuu danda'a. Haa ta'u malee, rakkoowwan kana salphisuf yaalli jira. Kanaaf, waa'ee rakkoolee kanaa doktora kee waliin mari'achuun barbaachisa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yeroo ulfaa sochii qaamaa akkamii gochuu hin qabnu?",
+        "answer": "Ispoortii kufuu balaa qaban (akka farda yaabbachuu, cabbii irratti xomborochuu), ispoortii wal qunnamsiisaa ta'e (akka boksii, kubbaa miillaa), shaakallii dugda irratti raawwatamu (ji'a sadaffaa booda), fi sochii iddoo ho'a qabu keessatti raawwatamu (akka ho'aa yookaan qilleensa o'a qabu keessatti) fagoo dhiibuun barbaachisa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yeroo ulfaa laguun (urjii) ni dhufaa?",
+        "answer": "Lakkii, hin dhufu. Dubartiin tokko yoo ulfa taate, booda laguun argamuu hin qabu. Yeroo ulfaa dhiigni dhangala'u kam iyyuu idilee miti, doktora argachuu qabda. Dubartoonni tokko tokko ji'oota jalqabaa keessa dhiigni xiqqaan isaan mudachuu danda'a, garuu kun laguu miti.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Dhiigni yeroo ulfaa dhangala'u maal agarsiisuu danda'a?",
+        "answer": "Yeroo ulfaa jalqabaa irratti dhiigni xiqqaan dhangala'u, hanqaaquun (daa'imni) marfaa keessa akka dhaabbate (implantation bleeding) agarsiisuu danda'a. Haa ta'u malee, yoo dhiigni ulfaataan dhangala'e, dhukkubsachuu, ykn utubamuu (cittuu) jiraate, gadalmaa (abortion), ulfi marfaa ala (ectopic pregnancy), ykn rakkoo iddoo biqiltuu (plasentaa) agarsiisuu danda'a.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Kaansarri marfaa dhukkuba quunnamtii saalaatiin daddarbaa?",
+        "answer": "Kaansarri ofiisaan quunnamtii saalaatiin hin daddarbu. Haa ta'u malee, baay'inni kaansara marfaa vaayirasii paapiilomaa namatti (HIV) tiin dhufa. Vaayirasiin kun quunnamtii saalaatiin daddarba. Nama HIV qabu wajjin quunnamtii saalaa gochuun, vaayirasiin daddarbuu danda'a.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Kaansara harmaa yeroo dheeraa dura adda baafachuuf, mammogram ala tooftaan qorannoo biroo ni jiraa?",
+        "answer": "Eeyyeen, alcharaasawundii harmaa (keessattuu dubartii dargaggoo fi harmaan isaanii furdaa ta'ef), EMaRii harmaa (saaxilamummaa ol'aanaa qabaniif), fi qorannaan harmaa kiliinikaa (doktoriin godhu).",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Booda yaala kaansara harmaa, hordoffiin (to'annoon) raawwatamu maal dabalata?",
+        "answer": "Qorannaan qaamaa yeroo hunda (jalqaba waggaa 2-3 keessa ji'a 3-6 hunda), mammogram (waggaa hunda), akka barbaachisummaatti qorannoonni suuraa biroo, qorannoon dhiigaa, fi miidhaan cinaa to'achuun.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Erga kaansara harmaa qabaachuu kootii booda, yeroo meeqaaf hordoffii (to'annoo) gochuu qaba?",
+        "answer": "Kaansara harmaa erga yaalamee booda, jireenya guutuu hordoffii gochuun barbaachisa. Haa ta'u malee, deddeebi'in hordoffii, yeroo daboluu ni hir'ata. Waggaa 2-3 jalqabaa keessa ji'a 3-6 hunda, sana booda ji'a 6-12 hunda, waggaa 5 booda immoo waggaa hunda.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Kaansara marfaa yaaluuf yaalli radiyeeshinii maalii?",
+        "answer": "Yaalli radiyeeshinii, seeliiwwan kaansaraa balleessuuf adugguu (radiation) humna qabu fayyadamuu dha. Kun, baqaqsaanii booda seeliiwwan kaansaraa hafan balleessuuf ykn baqaqsaaniidhaa gara biraatti (keessattuu kaansara sadarkaa ol'aanaa ta'ef) fayyadama.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Miidhaan cinaa yaala radiyeeshinii kaansara marfaa maalii?",
+        "answer": "Dadhabbii, iddoo yaalli godhame irratti gogaan aaruu, lallabuu, garaa kaasuu (alveolus), ujummoon fincaanii aaruu, ujummoon dhalaa goguu fi qabachuu, fi yeroo hin guutin dulloomuu (yoo adugguun qaamolee hanqaaquu (ovaries) irratti ga'e).",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Dhiigni booda daa'imaa dhangala'u yoom dhaabata?",
+        "answer": "Dhiigni booda daa'imaa dhangala'u (lochia), yeroo baay'ee torbanoota 2-4 keessatti dhaabata. Dubartoonni tokko tokko irratti garuu torbanoota 6 turachuu danda'a. Dhiigni suuta suutaan hir'achuu fi halluun isaa qal'achuu qaba.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Kaansara marfaa ittisuuf kondomii fayyadamuun ni gargaaraa?",
+        "answer": "Eeyyeen, kondomii sirnaan fayyadamuun, vaayirasii HIV daddarbuu hir'isa. Haa ta'u malee, kondomiin qaama hin haguugne irraa vaayirasiin daddarbuu waan danda'uuf, guutummaatti hin eegu. Haa ta'u malee, talaallii fi qorannaa yeroo hunda wajjin yoo fayyadamtan, bu'aa qabeessa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Yoo kaansarri harmaa na qabee fi kaansarichi harmaa lamaanitti faffaca'e, baqaqsaanii akkamii na barbaachisa?",
+        "answer": "Yoo kaansarichi harmaa lamaan jiru, dubbaalii masteektomii (harmaa lamaan baafachuu) barbaachisaa ta'uu danda'a. Haa ta'u malee, yeroo tokko tokko harmaa kaansarri qabu irratti qofa masteektomii ykn baqaqsaanii harmaa oolchuu biroo gochuun danda'ama. Murteen, akka gosa, sadarkaa kaansaraa, fi filannoo dhukkubsattuu irratti hundaa'a.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Kaansara harmaa yaaluuf yaalli hormoonii maalii?",
+        "answer": "Yaalli hormoonii, seeliiwwan kaansaraa hormoonii qabataniin guddachuu dhaabuuf ykn suutessuuf godhamu dha. Kun, hojii qaamolee hanqaaquu (ovaries) dhaabuun ykn hormooniin seeliiwwan kaansaraa irratti akka hin hojjenne dhorkuun ta'a.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Qorannaan kaansara marfaa (Pap smear) eessa gochuu danda'ama?",
+        "answer": "Qorannaan kaansara marfaa, hospitaalota mootummaa, buufata fayyaa, fi kiliinikota dhuunfaa hunda keessatti argachuu danda'ama. Akkasumas, sagantaa fayyaa hawaasaa fi kiliinikota fayyaa dubartii addaa keessatti tajaajilli kun kenname.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Garaan (cittuu) yeroo ulfaa mudatu yoom balaa?",
+        "answer": "Mallattoolee armaan gadii wajjin yoo mul'ate, balaa ta'uu danda'a: dhiigni dhangala'uu, qandhoo, hollachuu, hoqisuu, fincaanuu gubachuu, ykn bishaan (oonni) dhangala'uu. Akkasumas, cittuun sun yoo cimaate, cimaa deeme, ykn boqonnaan yoo hin salphanne, yaddaddhabdee doktora argadhu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Kaansara harmaa qabaachuu kootiin, doktora akkamii gaafachuu qaba?",
+        "answer": "Yaalli kaansara harmaa, garee ogeeyyii adda addaatiin raawwatama: doktora kaansaraa (onkooloojisti), doktora baqaqsaanii, doktora radiyeeshinii, ogeessa paatoolojii, fi ogeessa raadiyoolojii. Akkasumas, ogeessa sammuu (sammuu) fi ogeessa nyaataa barbaaduu danda'a.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Kaansara harmaa yaaluuf keemooteraapiin (kemoo) maalii?",
+        "answer": "Keemoon, seeliiwwan kaansaraa balleessuuf yookaan akka hin baay'anne godhuuf qoricha fayyadamuu dha. Qorichoonni kun yeroo baay'ee hidda dhiigaa keessaniin ykn kiliinikaaliin kennama. Keemoo, baqaqsaanii dura (gurdaa xiqqeessuuf) ykn booda (seeliiwwan kaansaraa hafan balleessuuf) kennamuu danda'a.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Dhiita'uu (garaa dhukkubsachuu) booda daa'imaa akkamitti ittisuun danda'ama?",
+        "answer": "Bishaan ga'aa dhuguu (keessattuu yeroo harmaa hoosisan), nyaata faayibarii qabu nyaachuu (kuduraa, fuduraa, midhaan guutuu), sochii qaamaa salphaa (akka deemuu) gochuu, fi yeroo fincaanuu dhagahamu yaddaddhabdee gara mana fincaanii deemuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Shaakalli Keegel (Kegel) booda daa'imaa maalii?",
+        "answer": "Shaakalli Keegel, fincaan qabduu (bladder), marfaa, fi mar'umaa jala jiran maashaalee gamoo gadi jajjabeessuuf godhamu dha. Kun, booda daa'imaa fincaanuu dhowwatamuu dhabuu ittisuuf fi maashaalee gamoo gadi jajjabeessuuf gargaara.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Booda yaala kaansara marfaa, ammas deebi'ee dhufuu danda'aa?",
+        "answer": "Eeyyeen, kaansarri marfaa booda yaalaa ammas deebi'ee dhufuu danda'a. Kanaaf, hordoffiin yeroo hunda gochuun baay'ee barbaachisa. Hordoffiin, qorannaa qaamaa, Pap smear, fi akka barbaachisummaatti qorannoonni suuraa biroo dabalata.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Kaansara harmaa yaaluuf imunooteraapiin (Immunotherapy) maalii?",
+        "answer": "Imunooteraapiin, sirni ittisaa qaamaa (immune system) kakaasuun kaansara waraanuuf gargaaru dha. Kun, keessattuu gosoota kaansara harmaa muraasa (akka kaansara harmaa sadii duwwaa (triple-negative breast cancer)) irratti bu'aa qabaachuu danda'a.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Dhiita'uun (garaa dhukkubsachuu) booda daa'imaa maaliif uumama?",
+        "answer": "Dhiita'uun booda daa'imaa, sababoota hedduudhaan dhufuu danda'a: jijjiiramni hormoonii yeroo ulfaa, maashaalee garaa laafuu, qoricha dhukkuba laaffisaa fayyadamuu, bishaan dhabuu, fi nyaanni jijjiiramuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Booda baqaqsaanii kaansara marfaa, yeroo meeqa fayyuun (boqonnaan) barbaachisa?",
+        "answer": "Booda baqaqsaanii kaansara marfaa, guutummaatti fayyuuf torbanoota 6-8 fudhachuu danda'a. Yeroo kana, ulfaataa baachuu, hojii mana ulfaataa, fi quunnamtii saalaa dhiisuun barbaachisa. Doktorri kee yoom gara jireenya idilee akka deebi'u sitti hima.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Booda yaala kaansara harmaa, qorichoota dabalataa nyaataa (supplement) fudhachuun ni gorfamaa?",
+        "answer": "Qoricha dabalataa kamiyyuu fudhachuun dura, doktora kee waliin mari'achuun barbaachisa. Qorichoonni dabalataan tokko tokko, yaala kaansaraa wajjin walitti bu'uun bu'aa isaa hir'isuu danda'u. Yeroo baay'ee, wantoota barbaachisoo ta'an nyaataa argachuun, dabalataa argachuu caala.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Miidhaan cinaa keemoo kaansara marfaa maalii?",
+        "answer": "Dadhabbii, lallabuu fi hoqisuu, rifeensi baqachuu (harca'uu), fedhii nyaataa dhabuu, garaa kaasuu, afaan keessatti madaan ba'uu, dandeettiin ittisaa qaamaa hir'achuu, salphaatti dhiigni dhangala'uu ykn cuuphuu, fi dhiigni hir'achuu.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Booda daa'imaa, yoom ammas ulfa ta'uu danda'ama?",
+        "answer": "Booda daa'imaa ammas ulfa ta'uun, sababoota adda addaa irratti hundaa'a. Haa ta'u malee, qaamni guutummaatti akka fayyu xiqqaatti ji'a 18-24 eeguun ni gorfama. Kun, haadhaafii daa'imaf fayyaa. Yoo baqaqsaanii ta'e, xiqqaatti ji'a 18-24 eeguun barbaachisa.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Cittuun garaa yeroo ulfaa mudatu dhimsa (da'umsa) wajjin walqabatee akka ta'e akkamitti beekuu danda'ama?",
+        "answer": "Torbaan 37 booda cittuun yeroo hunda mul'atu, garmaanlee dhimsa ta'uu danda'a. Garmaanleen dhugaa: yeroo isaa wal qixa qaba, yeroo daboluu dhama'aa (cimaa) deema, fi iddoo jijjiiruun hin salphatu. Sana dura yoo ta'e, garmaanlee yeroo hin guutin ta'uu danda'a.",
+        "category": "maternal_health"
+    },
+    {
+        "question": "Dubartoota kaansara harmaa qabaniif deeggarsa sammuu (sammuu) ni jiraa?",
+        "answer": "Eeyyeen, hospitaalonni fi dhaabbileen mootummaa hin taane hedduun, dhukkubsattoota kaansara harmaaf deeggarsa sammuu kenna. Akkasumas, dubartoonni dhukkuba kana milkaa'inaan fudhatanii turan garee deeggarsa geggeessu. Isaan kun, muuxannoo qooduuf, odeeffannoo wal jijjiiruuf, fi deeggarsa miiraa argachuuf gargaaru.",
+        "category": "breast_cancer"
+    },
+    {
+        "question": "Baqaqsaanii kaansara marfaa jireenya saalaa irratti dhiibbaa qabaa?",
+        "answer": "Eeyyeen, baqaqsaanii kaansara marfaa jireenya saalaa irratti dhiibbaa geessisuu danda'a. Ujummoon dhalaa goguu, qabachuu, yeroo qunnamtii saalaa dhukkubsachuu, fi fedhiin saalaa hir'achuu danda'a. Haa ta'u malee, rakkoowwan kana salphisuf yaalli jira.",
+        "category": "maternal_health"
+    }
+]

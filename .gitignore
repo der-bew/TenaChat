@@ -4,3 +4,5 @@
 node_modules/
 __pycache__/
 .python-version
+docs/
+QUICKSTART.md
