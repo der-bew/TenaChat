@@ -37,6 +37,7 @@ interface Message {
   content: string;
   timestamp?: Date;
   attachment?: MessageAttachment;
+  sources?: Array<{ source: string; file_type?: string }>;
 }
 
 interface Conversation {
@@ -74,6 +75,8 @@ interface ChatApiResponse {
   conversation_id: string;
   cached?: boolean;
   tts_url?: string | null;
+  sources?: Array<{ source: string; file_type?: string }>;
+  triage_level?: string | null;
 }
 
 interface ImageApiResponse {
@@ -745,6 +748,7 @@ export default function ChatPage() {
           role: "assistant",
           content: data.response,
           timestamp: new Date(),
+          sources: (data as ChatApiResponse).sources ?? [],
         };
 
         setMessages((prev) => {

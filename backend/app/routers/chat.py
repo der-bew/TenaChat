@@ -1,6 +1,6 @@
 """
 Chat endpoints for the app
-version: 2.1.0
+version: 3.0.0
 author: Derbew Felasman
 """
 
@@ -8,7 +8,7 @@ import base64
 import logging
 import tempfile
 import uuid
-from typing import Any, Optional, cast
+from typing import Any, List, Optional, cast
 
 from app.config import OPENAI_API_KEY
 from app.db.supabase_client import supabase
@@ -81,6 +81,10 @@ class ChatResponse(BaseModel):
     conversation_id: str
     cached: bool = False
     tts_url: Optional[str] = None
+    # Source documents used to ground the response (empty when cached or not applicable)
+    sources: List[dict] = Field(default_factory=list)
+    # Triage level: "routine" or "emergency"
+    triage_level: Optional[str] = None
 
 
 class SpeechResponse(BaseModel):
@@ -213,11 +217,16 @@ def _build_tts_url(text: str, language: str = "en") -> str:
 async def chat_endpoint(
     request: ChatRequest,
     x_anonymous_id: Optional[str] = Header(None, description="Anonymous session ID"),
+    x_request_id: Optional[str] = Header(None, description="Client-supplied correlation ID"),
     user_id: Optional[str] = Depends(get_current_user_or_anonymous),
 ) -> ChatResponse:
     """
     Process a text chat message and return AI response.
     """
+    # Correlation ID for tracing this request through logs
+    correlation_id = x_request_id or str(uuid.uuid4())
+    log = logging.LoggerAdapter(logger, {"correlation_id": correlation_id})
+
     try:
         resolved_user_id, is_anonymous = _get_or_create_user_id(user_id, x_anonymous_id)
         await _initialize_anonymous_session_if_needed(
@@ -227,8 +236,8 @@ async def chat_endpoint(
         )
 
         convo_id = request.conversation_id or str(uuid.uuid4())
-        logger.info(
-            "Processing text chat for user %s, conversation %s, anonymous=%s",
+        log.info(
+            "Processing text chat | user=%s | conversation=%s | anonymous=%s",
             resolved_user_id,
             convo_id,
             is_anonymous,
@@ -245,7 +254,7 @@ async def chat_endpoint(
             except HTTPException:
                 raise
             except Exception as e:
-                logger.error("Error creating conversation: %s", e, exc_info=True)
+                log.error("Error creating conversation: %s", e, exc_info=True)
                 raise HTTPException(
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                     detail="Failed to create conversation",
@@ -257,7 +266,7 @@ async def chat_endpoint(
         cached_response = get_cached_response(cache_key)
 
         if cached_response:
-            logger.info("Returning cached response for user %s", resolved_user_id)
+            log.info("Returning cached response | user=%s", resolved_user_id)
             return ChatResponse(
                 response=cached_response,
                 conversation_id=convo_id,
@@ -290,9 +299,18 @@ async def chat_endpoint(
                 and isinstance(final_message.content, str)
                 else str(final_message)
             )
-            logger.info("Generated AI response for user %s", resolved_user_id)
+            raw_sources = result.get("sources")
+            sources: List[dict] = raw_sources if isinstance(raw_sources, list) else []
+            raw_triage = result.get("triage_level")
+            triage_level: Optional[str] = raw_triage if isinstance(raw_triage, str) else None
+            log.info(
+                "Generated AI response | user=%s | triage=%s | sources=%d",
+                resolved_user_id,
+                triage_level,
+                len(sources),
+            )
         except Exception as e:
-            logger.error("Error generating AI response: %s", e, exc_info=True)
+            log.error("Error generating AI response: %s", e, exc_info=True)
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to generate response. Please try again.",
@@ -314,19 +332,26 @@ async def chat_endpoint(
                     assistant_message=response,
                 )
         except Exception as e:
-            logger.error("Error saving messages: %s", e, exc_info=True)
+            log.error("Error saving messages: %s", e, exc_info=True)
 
         return ChatResponse(
             response=response,
             conversation_id=convo_id,
             cached=False,
             tts_url=_build_tts_url(response, request.language) if request.tts else None,
+            sources=sources,
+            triage_level=triage_level,
         )
 
     except HTTPException:
         raise
     except Exception as e:
-        logger.error("Unexpected error in chat endpoint: %s", e, exc_info=True)
+        logger.error(
+            "Unexpected error in chat endpoint | correlation_id=%s: %s",
+            correlation_id,
+            e,
+            exc_info=True,
+        )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An unexpected error occurred",
