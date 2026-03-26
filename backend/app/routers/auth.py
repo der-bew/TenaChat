@@ -1,7 +1,25 @@
 """
-Authentication and authorization endpoints for the app
-version: 1.0.0
+Authentication and authorization endpoints.
+version: 1.1.0
 author: Derbew Felasman
+
+Auth architecture
+-----------------
+The canonical auth flow uses the **Supabase JS SDK on the frontend**.  The
+frontend obtains a JWT access token from Supabase and sends it in the
+``Authorization: Bearer <token>`` header on every backend request.
+
+The backend endpoints below (``/auth/signup``, ``/auth/login``) are provided
+as a convenience for non-browser clients (e.g. CLI tools or integrations) that
+cannot use the Supabase JS SDK directly.  Browsers should use Supabase Auth on
+the frontend and not call these endpoints.
+
+Backend authorization is handled by two FastAPI dependencies:
+
+* ``get_current_user``               – requires a valid bearer token; raises 401
+                                       otherwise.
+* ``get_current_user_or_anonymous``  – returns the authenticated user ID, or
+                                       ``None`` for anonymous sessions.
 """
 
 from fastapi import APIRouter, HTTPException, Depends

@@ -2,7 +2,9 @@
 
 An AI-powered health chatbot focused on Ethiopian women’s health, built with a FastAPI backend, a Next.js frontend, retrieval-augmented generation (RAG), OpenAI models, Redis caching, and Supabase-backed conversation history.
 
-This project is designed to answer **health-related questions only**. The assistant uses a local FAISS knowledge index built from PDF and JSON health resources, short-term chat memory, long-term conversation history, and optional web search for current health topics.
+This project is designed to answer **health-related questions only**. The assistant uses a local FAISS knowledge index built from PDF and JSON health resources, a medical triage/safety layer, short-term chat memory, long-term conversation history, and optional web search for current health topics.
+
+For a full architectural overview see **[ARCHITECTURE.md](ARCHITECTURE.md)**.
 
 ---
 
@@ -70,6 +72,9 @@ The assistant is constrained to **health-domain questions** and should refuse un
 ## Core Capabilities
 
 - Health-only conversational assistant
+- Medical triage safety layer — detects emergencies and returns safe escalation messages
+- Evidence-grounded responses — returns an uncertainty fallback when evidence is insufficient
+- Source citations surfaced in the UI for transparency
 - Retrieval-augmented responses from local knowledge files
 - Short-term and long-term memory
 - Optional current-information lookup via Serper
@@ -119,8 +124,12 @@ tenachat/
 │   ├── app/
 │   │   ├── db/                  # Supabase client and DB-related code
 │   │   ├── middleware/          # Middleware such as rate limiting
-│   │   ├── rag/                 # Agent graph, retrieval, indexer
+│   │   ├── rag/                 # Agent graph, retrieval, indexer, triage
+│   │   │   ├── graph.py         # LangGraph agent (retrieve → generate)
+│   │   │   ├── indexer.py       # Canonical FAISS indexing pipeline
+│   │   │   └── triage.py        # Medical safety triage layer
 │   │   ├── routers/             # FastAPI route modules
+│   │   ├── tests/               # Safety and unit tests
 │   │   └── utils/               # Cache, validation, helpers
 │   ├── Dockerfile
 │   └── main.py                  # FastAPI application entrypoint
@@ -134,6 +143,13 @@ tenachat/
 │   ├── package.json
 │   └── package-lock.json
 ├── knowledge_base/              # PDF / JSON sources and FAISS index files
+├── evals/                       # Evaluation dataset
+│   └── health_eval_dataset.json
+├── docs/                        # Architecture and operations docs
+│   ├── observability.md
+│   ├── pgvector_migration.md
+│   └── ingestion_scaling.md
+├── ARCHITECTURE.md              # Canonical architecture overview
 ├── .dockerignore
 ├── docker-compose.yml
 ├── pyproject.toml

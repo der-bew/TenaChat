@@ -1,17 +1,20 @@
 """
 Backend for the Ethiopian Women Health Chatbot
-version: 2.1.0
+version: 3.0.0
 Author: Derbew Felasman
 """
 
 import logging
 import re
+import time
 from typing import TYPE_CHECKING, Annotated, Any, List, TypedDict, cast
 
 from app.config import OPENAI_API_KEY, SERPER_API_KEY
 from app.db.supabase_client import supabase
+from app.rag.triage import TriageLevel, classify_triage, get_insufficient_evidence_response
 from langchain_community.utilities.google_serper import GoogleSerperAPIWrapper
 from langchain_community.vectorstores import FAISS
+from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
 from langchain_core.tools import tool
@@ -253,6 +256,12 @@ class AgentState(TypedDict):
     is_health_query: bool
     language: str
     requested_language: str
+    # Triage result: "routine" or "emergency"
+    triage_level: str
+    # Retrieved source documents for citation
+    sources: List[dict]
+    # Whether retrieved evidence was sufficient to ground a response
+    has_evidence: bool
 
 
 @tool(description="Search the web for up-to-date information")
@@ -422,6 +431,42 @@ def vector_retriever(query: str) -> str:
         return "Error retrieving from knowledge base."
 
 
+def _retrieve_with_sources(query: str) -> tuple[str, List[dict]]:
+    """
+    Retrieve from FAISS vector DB and return (context_text, sources).
+
+    Sources are deduplicated metadata dicts with at least a 'source' key.
+    """
+    vs = _load_vectorstore()
+    if vs is None:
+        return "Knowledge base not available—using general info.", []
+    try:
+        docs: list[Document] = vs.similarity_search(query, k=5)
+        if not docs:
+            return "No matching knowledge found.", []
+
+        context_text = "\n".join([doc.page_content for doc in docs])
+
+        # Deduplicate sources preserving order
+        seen: set[str] = set()
+        sources: List[dict] = []
+        for doc in docs:
+            meta = doc.metadata or {}
+            src_name = meta.get("source", "")
+            if src_name and src_name not in seen:
+                seen.add(src_name)
+                sources.append(
+                    {
+                        "source": src_name,
+                        "file_type": meta.get("file_type", ""),
+                    }
+                )
+        return context_text, sources
+    except Exception as e:
+        logger.error(f"Error retrieving from vector DB: {e}")
+        return "Error retrieving from knowledge base.", []
+
+
 tools = [vector_retriever, web_search]
 
 
@@ -445,18 +490,60 @@ def retrieve(state: AgentState):
     state["requested_language"] = requested_language
     state["language"] = language
 
+    # --- Triage: check for medical emergencies before any other processing ---
+    triage = classify_triage(user_query, language)
+    state["triage_level"] = triage.level.value
+    logger.info(
+        "Triage result for conversation %s: %s",
+        state.get("conversation_id", "unknown"),
+        triage.level.value,
+    )
+
+    if triage.level == TriageLevel.EMERGENCY:
+        state["is_health_query"] = True
+        state["has_evidence"] = True  # escalation message is self-contained
+        state["sources"] = []
+        state["short_term_memory"] = "Not used for emergency escalation."
+        state["long_term_memory"] = "Not used for emergency escalation."
+        state["context"] = triage.escalation_message or ""
+        return state
+
+    # --- Health domain check ---
     is_health_query = _is_health_related_query(user_query, detected_language)
     state["is_health_query"] = is_health_query
 
     if not is_health_query:
+        state["has_evidence"] = False
+        state["sources"] = []
         state["short_term_memory"] = "Not used for non-health queries."
         state["long_term_memory"] = "Not used for non-health queries."
         state["context"] = _refusal_message_for_language(language)
         return state
 
+    # --- Retrieval with metrics ---
+    retrieval_start = time.monotonic()
     short_term_memory = _format_short_term_memory(messages[:-1])
     long_term_memory = _load_long_term_memory(state["conversation_id"])
-    vector_context = vector_retriever.invoke(user_query)
+    vector_context, sources = _retrieve_with_sources(user_query)
+    retrieval_latency_ms = (time.monotonic() - retrieval_start) * 1000
+
+    has_evidence = bool(
+        sources
+        and vector_context
+        and "No matching knowledge found" not in vector_context
+        and "not available" not in vector_context.lower()
+    )
+
+    logger.info(
+        "Retrieval metrics — conversation: %s | sources: %d | has_evidence: %s | latency_ms: %.1f",
+        state.get("conversation_id", "unknown"),
+        len(sources),
+        has_evidence,
+        retrieval_latency_ms,
+    )
+
+    state["has_evidence"] = has_evidence
+    state["sources"] = sources
 
     needs_web_search = any(
         keyword in user_query.lower()
@@ -494,10 +581,25 @@ def retrieve(state: AgentState):
 def generate(state: AgentState):
     language = state.get("language", "en")
 
+    # Emergency: return escalation message directly (already set in context by retrieve)
+    if state.get("triage_level") == TriageLevel.EMERGENCY.value:
+        escalation_msg = state.get("context", "")
+        return {"messages": [AIMessage(content=escalation_msg)]}
+
     if not state.get("is_health_query", False):
         return {
             "messages": [AIMessage(content=_refusal_message_for_language(language))]
         }
+
+    # Grounding policy: if no evidence was retrieved, return an uncertainty response
+    # instead of speculative guidance.
+    if not state.get("has_evidence", False):
+        logger.info(
+            "Insufficient evidence for conversation %s — returning fallback response",
+            state.get("conversation_id", "unknown"),
+        )
+        fallback = get_insufficient_evidence_response(language)
+        return {"messages": [AIMessage(content=fallback)]}
 
     system_prompt = (
         "You are a helpful, empathetic health chatbot for Ethiopian women. "
