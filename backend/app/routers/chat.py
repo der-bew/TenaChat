@@ -299,8 +299,10 @@ async def chat_endpoint(
                 and isinstance(final_message.content, str)
                 else str(final_message)
             )
-            sources: List[dict] = result.get("sources", [])  # type: ignore[assignment]
-            triage_level: Optional[str] = result.get("triage_level")  # type: ignore[assignment]
+            raw_sources = result.get("sources")
+            sources: List[dict] = raw_sources if isinstance(raw_sources, list) else []
+            raw_triage = result.get("triage_level")
+            triage_level: Optional[str] = raw_triage if isinstance(raw_triage, str) else None
             log.info(
                 "Generated AI response | user=%s | triage=%s | sources=%d",
                 resolved_user_id,

@@ -44,7 +44,10 @@ CREATE EXTENSION IF NOT EXISTS vector;
 CREATE TABLE documents (
     id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     content     text NOT NULL,
-    embedding   vector(3072),  -- text-embedding-3-large produces 3072-dim vectors
+    -- text-embedding-3-large defaults to 3072 dims; can be reduced to 1024 or 256
+    -- via the OpenAI API `dimensions` parameter for storage/latency trade-offs.
+    -- Set this column size to match the dimensions you configure in OpenAIEmbeddings.
+    embedding   vector(3072),
     source      text,
     file_type   text,
     file_path   text,

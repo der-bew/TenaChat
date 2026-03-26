@@ -35,6 +35,7 @@ EMBEDDING_MODEL = "text-embedding-3-large"
 AGENT_MODEL = "gpt-4o-mini"
 SHORT_TERM_MEMORY_LIMIT = 8
 LONG_TERM_MEMORY_LIMIT = 10
+RETRIEVAL_TOP_K = 5  # Number of documents to retrieve per query
 
 SUPPORTED_LANGUAGES = ("en", "am", "om", "ti")
 
@@ -420,7 +421,7 @@ def vector_retriever(query: str) -> str:
     if vs is None:
         return "Knowledge base not available—using general info."
     try:
-        docs = vs.similarity_search(query, k=5)
+        docs = vs.similarity_search(query, k=RETRIEVAL_TOP_K)
         return (
             "\n".join([doc.page_content for doc in docs])
             if docs
@@ -431,19 +432,20 @@ def vector_retriever(query: str) -> str:
         return "Error retrieving from knowledge base."
 
 
-def _retrieve_with_sources(query: str) -> tuple[str, List[dict]]:
+def _retrieve_with_sources(query: str) -> tuple[str, List[dict], bool]:
     """
-    Retrieve from FAISS vector DB and return (context_text, sources).
+    Retrieve from FAISS vector DB and return (context_text, sources, has_evidence).
 
+    ``has_evidence`` is True only when at least one relevant document was found.
     Sources are deduplicated metadata dicts with at least a 'source' key.
     """
     vs = _load_vectorstore()
     if vs is None:
-        return "Knowledge base not available—using general info.", []
+        return "Knowledge base not available—using general info.", [], False
     try:
-        docs: list[Document] = vs.similarity_search(query, k=5)
+        docs: list[Document] = vs.similarity_search(query, k=RETRIEVAL_TOP_K)
         if not docs:
-            return "No matching knowledge found.", []
+            return "No matching knowledge found.", [], False
 
         context_text = "\n".join([doc.page_content for doc in docs])
 
@@ -461,10 +463,10 @@ def _retrieve_with_sources(query: str) -> tuple[str, List[dict]]:
                         "file_type": meta.get("file_type", ""),
                     }
                 )
-        return context_text, sources
+        return context_text, sources, True
     except Exception as e:
         logger.error(f"Error retrieving from vector DB: {e}")
-        return "Error retrieving from knowledge base.", []
+        return "Error retrieving from knowledge base.", [], False
 
 
 tools = [vector_retriever, web_search]
@@ -524,15 +526,8 @@ def retrieve(state: AgentState):
     retrieval_start = time.monotonic()
     short_term_memory = _format_short_term_memory(messages[:-1])
     long_term_memory = _load_long_term_memory(state["conversation_id"])
-    vector_context, sources = _retrieve_with_sources(user_query)
+    vector_context, sources, has_evidence = _retrieve_with_sources(user_query)
     retrieval_latency_ms = (time.monotonic() - retrieval_start) * 1000
-
-    has_evidence = bool(
-        sources
-        and vector_context
-        and "No matching knowledge found" not in vector_context
-        and "not available" not in vector_context.lower()
-    )
 
     logger.info(
         "Retrieval metrics — conversation: %s | sources: %d | has_evidence: %s | latency_ms: %.1f",

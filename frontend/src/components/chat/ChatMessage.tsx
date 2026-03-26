@@ -113,16 +113,20 @@ export function ChatMessage({
 
         {!isUser && !isSystem && message.sources && message.sources.length > 0 && (
           <div className="mt-1 flex flex-wrap gap-1">
-            {message.sources.map((s, i) => (
-              <span
-                key={i}
-                title={s.source}
-                className="inline-flex items-center rounded bg-zinc-100 px-1.5 py-0.5 text-[0.7rem] text-zinc-500 dark:bg-zinc-700 dark:text-zinc-400"
-              >
-                📄 {s.source.replace(/\.[^.]+$/, "").slice(0, 40)}
-                {s.source.length > 40 ? "…" : ""}
-              </span>
-            ))}
+            {message.sources.map((s, i) => {
+              const nameWithoutExt = s.source.replace(/\.[^.]+$/, "");
+              const truncated = nameWithoutExt.slice(0, 40);
+              return (
+                <span
+                  key={i}
+                  title={s.source}
+                  className="inline-flex items-center rounded bg-zinc-100 px-1.5 py-0.5 text-[0.7rem] text-zinc-500 dark:bg-zinc-700 dark:text-zinc-400"
+                >
+                  📄 {truncated}
+                  {nameWithoutExt.length > 40 ? "…" : ""}
+                </span>
+              );
+            })}
           </div>
         )}
       </div>

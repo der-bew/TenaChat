@@ -113,6 +113,9 @@ _EMERGENCY_SUBSTRINGS_TI = [
 _ALL_EMERGENCY_SUBSTRINGS: tuple[str, ...] = tuple(
     _EMERGENCY_SUBSTRINGS_AM + _EMERGENCY_SUBSTRINGS_OM + _EMERGENCY_SUBSTRINGS_TI
 )
+# Note: substring containment checks require iteration; a set cannot be used here
+# since we check `substring in query` (not `query in set`).  The list is short
+# (~20 items) so linear scan is acceptable.
 
 _COMPILED_EMERGENCY_PATTERNS: list[re.Pattern[str]] = [
     re.compile(p, re.IGNORECASE) for p in _EMERGENCY_PATTERNS_EN
