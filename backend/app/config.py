@@ -15,6 +15,8 @@ load_dotenv()
 SUPABASE_URL: Optional[str] = None
 SUPABASE_KEY: Optional[str] = None
 OPENAI_API_KEY: Optional[str] = None
+OPENROUTER_API_KEY: Optional[str] = None
+OPENROUTER_BASE_URL: Optional[str] = None
 SERPER_API_KEY: Optional[str] = None
 GOOGLE_API_KEY: Optional[str] = None
 TAVILY_API_KEY: Optional[str] = None
@@ -38,6 +40,11 @@ def validate_required_env_vars():
         logger.error(error_msg)
         raise ValueError(error_msg)
 
+    if not OPENROUTER_API_KEY:
+        logger.warning(
+            "OPENROUTER_API_KEY is not set. Text chat will use the legacy OpenAI model instead of the configured OpenRouter primary/fallback chain."
+        )
+
     if not SERPER_API_KEY:
         logger.warning(
             "SERPER_API_KEY is not set. Web search will be unavailable until it is configured."
@@ -52,6 +59,8 @@ def load_config():
         SUPABASE_URL, \
         SUPABASE_KEY, \
         OPENAI_API_KEY, \
+        OPENROUTER_API_KEY, \
+        OPENROUTER_BASE_URL, \
         SERPER_API_KEY, \
         GOOGLE_API_KEY, \
         TAVILY_API_KEY, \
@@ -63,10 +72,12 @@ def load_config():
     SUPABASE_URL = os.getenv("SUPABASE_URL")
     SUPABASE_KEY = os.getenv("SUPABASE_KEY")
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-    SERPER_API_KEY = os.getenv("SERPER_API_KEY")
-    GOOGLE_API_KEY = (
-        OPENAI_API_KEY or os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+    OPENROUTER_BASE_URL = os.getenv(
+        "OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"
     )
+    SERPER_API_KEY = os.getenv("SERPER_API_KEY")
+    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
     TAVILY_API_KEY = SERPER_API_KEY or os.getenv("TAVILY_API_KEY")
     ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 

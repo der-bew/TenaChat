@@ -1,6 +1,6 @@
 # TenaChat
 
-An AI-powered health chatbot focused on Ethiopian women’s health, built with a FastAPI backend, a Next.js frontend, retrieval-augmented generation (RAG), OpenAI models, Redis caching, and Supabase-backed conversation history.
+An AI-powered health chatbot focused on Ethiopian women’s health, built with a FastAPI backend, a Next.js frontend, retrieval-augmented generation (RAG), OpenRouter-backed chat generation, OpenAI-powered embeddings and multimodal utilities, Redis caching, and Supabase-backed conversation history.
 
 This project is designed to answer **health-related questions only**. The assistant uses a local FAISS knowledge index built from PDF and JSON health resources, a medical triage/safety layer, short-term chat memory, long-term conversation history, and optional web search for current health topics.
 
@@ -32,7 +32,8 @@ The chatbot provides a health-focused conversational experience with:
 
 - a **FastAPI** backend for chat, retrieval, and health APIs
 - a **Next.js** frontend for the web experience
-- **OpenAI `gpt-4o-mini`** for chat responses
+- **OpenRouter `google/gemma-4-31b-it:free`** as the primary chat model
+- **OpenRouter `google/gemini-2.5-flash`** as the chat fallback model
 - **OpenAI `text-embedding-3-large`** for semantic retrieval
 - **FAISS** for local vector search
 - **Supabase** for persisted conversation history
@@ -55,7 +56,7 @@ The assistant is constrained to **health-domain questions** and should refuse un
    - long-term memory from Supabase conversation history
    - retrieved health context from FAISS
    - optional web search context from Serper for current topics
-5. The backend sends the aggregated context to **OpenAI `gpt-4o-mini`**.
+5. The backend sends the aggregated context to **OpenRouter `google/gemma-4-31b-it:free`** and falls back to **`google/gemini-2.5-flash`** if needed.
 6. The response is returned to the client and optionally cached/stored.
 
 ### RAG Flow
@@ -169,6 +170,7 @@ Create a root `.env` file for backend/runtime services.
 SUPABASE_URL=your_supabase_url
 SUPABASE_KEY=your_supabase_service_or_access_key
 OPENAI_API_KEY=your_openai_api_key
+OPENROUTER_API_KEY=your_openrouter_api_key
 ```
 
 ### Optional / Recommended Backend Variables
@@ -178,6 +180,9 @@ SERPER_API_KEY=your_serper_api_key
 REDIS_URL=redis://redis:6379/0
 ENVIRONMENT=production
 CORS_ORIGINS=http://localhost:3000
+OPENROUTER_BASE_URL=https://openrouter.ai/api/v1
+OPENROUTER_PRIMARY_MODEL=google/gemma-4-31b-it:free
+OPENROUTER_FALLBACK_MODEL=google/gemini-2.5-flash
 OPENAI_EMBEDDING_MODEL=text-embedding-3-large
 INDEX_BATCH_SIZE=12
 INDEX_MAX_PDFS=0
@@ -190,10 +195,14 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 ### Notes
 
-- `OPENAI_API_KEY` is required for:
-  - chat generation
+- `OPENROUTER_API_KEY` is used for text chat generation:
+  - primary model: `google/gemma-4-31b-it:free`
+  - fallback model: `google/gemini-2.5-flash`
+- `OPENAI_API_KEY` is still required for:
   - embedding generation
-  - current multimodal route implementation
+  - speech-to-text
+  - text-to-speech
+  - current multimodal image route implementation
 - `SERPER_API_KEY` is required only if web search should be enabled
 - `REDIS_URL` is set automatically for Docker Compose, but keeping it in `.env` is fine
 - frontend public variables are injected through Docker Compose for the frontend service

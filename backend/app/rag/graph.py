@@ -5,12 +5,18 @@ Author: Derbew Felasman
 """
 
 import logging
+import os
 import re
 import time
 from pathlib import Path
 from typing import TYPE_CHECKING, Annotated, Any, List, TypedDict, cast
 
-from app.config import OPENAI_API_KEY, SERPER_API_KEY
+from app.config import (
+    OPENAI_API_KEY,
+    OPENROUTER_API_KEY,
+    OPENROUTER_BASE_URL,
+    SERPER_API_KEY,
+)
 from app.db.supabase_client import supabase
 from app.rag.triage import TriageLevel, classify_triage, get_insufficient_evidence_response
 from langchain_community.utilities.google_serper import GoogleSerperAPIWrapper
@@ -36,7 +42,13 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 KNOWLEDGE_BASE_DIR = PROJECT_ROOT / "knowledge_base"
 
 EMBEDDING_MODEL = "text-embedding-3-large"
-AGENT_MODEL = "gpt-4o-mini"
+LEGACY_OPENAI_AGENT_MODEL = os.getenv("OPENAI_CHAT_MODEL", "gpt-4o-mini")
+OPENROUTER_PRIMARY_MODEL = os.getenv(
+    "OPENROUTER_PRIMARY_MODEL", "google/gemma-4-31b-it:free"
+)
+OPENROUTER_FALLBACK_MODEL = os.getenv(
+    "OPENROUTER_FALLBACK_MODEL", "google/gemini-2.5-flash"
+)
 SHORT_TERM_MEMORY_LIMIT = 8
 LONG_TERM_MEMORY_LIMIT = 10
 RETRIEVAL_TOP_K = 3  # Number of documents to retrieve per query
@@ -245,14 +257,72 @@ if serper_available:
         logger.error(f"Failed to initialize Serper: {e}")
         serper_available = False
 
-llm = ChatOpenAI(
-    model=AGENT_MODEL,
-    temperature=0.3,
-    timeout=LLM_TIMEOUT_SECONDS,
-    max_retries=1,
-    max_tokens=220,
-    api_key=SecretStr(OPENAI_API_KEY) if OPENAI_API_KEY else None,
+def _build_chat_llm(
+    model: str, api_key: str | None, base_url: str | None = None
+) -> ChatOpenAI:
+    return ChatOpenAI(
+        model=model,
+        temperature=0.3,
+        timeout=LLM_TIMEOUT_SECONDS,
+        max_retries=1,
+        max_tokens=220,
+        api_key=SecretStr(api_key) if api_key else None,
+        base_url=base_url,
+    )
+
+
+def _build_generation_llms() -> tuple[str, ChatOpenAI, str | None, ChatOpenAI | None]:
+    if OPENROUTER_API_KEY:
+        logger.info(
+            "Using OpenRouter chat models primary=%s fallback=%s",
+            OPENROUTER_PRIMARY_MODEL,
+            OPENROUTER_FALLBACK_MODEL,
+        )
+        return (
+            OPENROUTER_PRIMARY_MODEL,
+            _build_chat_llm(
+                model=OPENROUTER_PRIMARY_MODEL,
+                api_key=OPENROUTER_API_KEY,
+                base_url=OPENROUTER_BASE_URL,
+            ),
+            OPENROUTER_FALLBACK_MODEL,
+            _build_chat_llm(
+                model=OPENROUTER_FALLBACK_MODEL,
+                api_key=OPENROUTER_API_KEY,
+                base_url=OPENROUTER_BASE_URL,
+            ),
+        )
+
+    logger.warning(
+        "OPENROUTER_API_KEY not configured; using legacy OpenAI chat model %s",
+        LEGACY_OPENAI_AGENT_MODEL,
+    )
+    return (
+        LEGACY_OPENAI_AGENT_MODEL,
+        _build_chat_llm(model=LEGACY_OPENAI_AGENT_MODEL, api_key=OPENAI_API_KEY),
+        None,
+        None,
+    )
+
+
+ACTIVE_PRIMARY_AGENT_MODEL, llm, ACTIVE_FALLBACK_AGENT_MODEL, fallback_llm = (
+    _build_generation_llms()
 )
+
+
+def _invoke_generation_llm(messages: List[BaseMessage]):
+    try:
+        return llm.invoke(messages)
+    except Exception as primary_error:
+        if fallback_llm is None or ACTIVE_FALLBACK_AGENT_MODEL is None:
+            raise
+        logger.warning(
+            "Primary chat model %s failed; retrying with fallback %s: %s",
+            ACTIVE_PRIMARY_AGENT_MODEL,
+            ACTIVE_FALLBACK_AGENT_MODEL,
+            primary_error,
+        )
+        return fallback_llm.invoke(messages)
 
 
 class AgentState(TypedDict):
@@ -681,7 +751,7 @@ def generate(state: AgentState):
     ]
 
     generation_start = time.monotonic()
-    response = llm.invoke(messages)
+    response = _invoke_generation_llm(messages)
     response_content = (
         response.content if isinstance(response.content, str) else str(response.content)
     )

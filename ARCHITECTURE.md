@@ -34,7 +34,7 @@ FastAPI backend  (Python 3.12)
     → health domain check        [non-health → refusal, stop]
     → retrieval (_retrieve_with_sources)  [FAISS local vector DB]
     → grounding check            [no evidence → uncertainty fallback, stop]
-    → LLM generate (gpt-4o-mini) [evidence-grounded response]
+    → LLM generate (OpenRouter gemma-4-31b-it:free → fallback gemini-2.5-flash) [evidence-grounded response]
     → ChatResponse (response + sources + triage_level)
 
   Storage / cache
