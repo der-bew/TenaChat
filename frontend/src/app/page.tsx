@@ -448,6 +448,7 @@ export default function ChatPage() {
     useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const hasLoadedSavedConversationsRef = useRef(false);
 
   const copy = useMemo(
     () => UI_COPY[selectedLanguage] ?? UI_COPY.en,
@@ -612,14 +613,29 @@ export default function ChatPage() {
         }));
 
         setConversations((prev) => {
+          const mappedWithExistingMessages = mapped.map((conversation) => {
+            const existing = prev.find((item) => item.id === conversation.id);
+            return existing?.messages?.length
+              ? { ...conversation, messages: existing.messages }
+              : conversation;
+          });
+
           if (!append) {
-            return mapped;
+            const mappedIds = new Set(
+              mappedWithExistingMessages.map((conversation) => conversation.id),
+            );
+            const localConversationsWithMessages = prev.filter(
+              (conversation) =>
+                conversation.messages.length > 0 &&
+                !mappedIds.has(conversation.id),
+            );
+            return [...localConversationsWithMessages, ...mappedWithExistingMessages];
           }
 
           const existingIds = new Set(
             prev.map((conversation) => conversation.id),
           );
-          const nextPage = mapped.filter(
+          const nextPage = mappedWithExistingMessages.filter(
             (conversation) => !existingIds.has(conversation.id),
           );
           return [...prev, ...nextPage];
@@ -1217,6 +1233,7 @@ export default function ChatPage() {
     if (!isSupabaseConfigured()) {
       setIsLoggedIn(false);
       setUserDisplayName(null);
+      hasLoadedSavedConversationsRef.current = false;
       setConversations([]);
       setMessages([]);
       setActiveConversationId(null);
@@ -1230,6 +1247,7 @@ export default function ChatPage() {
     await supabase.auth.signOut();
     setIsLoggedIn(false);
     setUserDisplayName(null);
+    hasLoadedSavedConversationsRef.current = false;
     setConversations([]);
     setMessages([]);
     setActiveConversationId(null);
@@ -1270,13 +1288,18 @@ export default function ChatPage() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       const isAuthenticated = !!session?.user;
       setIsLoggedIn(isAuthenticated);
       setUserDisplayName(getUserDisplayName(session?.user));
 
-      if (!isAuthenticated) {
+      if (event !== "SIGNED_IN" && event !== "SIGNED_OUT") {
+        return;
+      }
+
+      if (!isAuthenticated || event === "SIGNED_OUT") {
         setUserDisplayName(null);
+        hasLoadedSavedConversationsRef.current = false;
         setConversations([]);
         setMessages([]);
         setActiveConversationId(null);
@@ -1291,6 +1314,7 @@ export default function ChatPage() {
       setActiveConversationId(null);
       setConversationsOffset(0);
       setHasMoreConversations(false);
+      hasLoadedSavedConversationsRef.current = true;
 
       await syncAnonymousHistoryAfterLogin();
       await loadSavedConversations();
@@ -1339,13 +1363,14 @@ export default function ChatPage() {
   }, [messages]);
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isLoggedIn && !hasLoadedSavedConversationsRef.current) {
+      hasLoadedSavedConversationsRef.current = true;
       void loadSavedConversations();
     }
   }, [isLoggedIn, loadSavedConversations]);
 
   useEffect(() => {
-    if (messages.some((message) => message.isPending)) {
+    if (messages.length > 0 || messages.some((message) => message.isPending)) {
       return;
     }
 
