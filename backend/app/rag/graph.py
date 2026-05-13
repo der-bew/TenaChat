@@ -17,7 +17,7 @@ from app.config import (
     OPENROUTER_BASE_URL,
     SERPER_API_KEY,
 )
-from app.db.supabase_client import supabase
+from app.db.supabase_client import get_supabase_client, supabase
 from app.rag.triage import TriageLevel, classify_triage, get_insufficient_evidence_response
 from langchain_community.utilities.google_serper import GoogleSerperAPIWrapper
 from langchain_community.vectorstores import FAISS
@@ -330,6 +330,7 @@ class AgentState(TypedDict):
     context: str
     user_id: str
     conversation_id: str
+    auth_token: str | None
     short_term_memory: str
     long_term_memory: str
     is_health_query: bool
@@ -404,12 +405,13 @@ def _format_short_term_memory(messages: List[BaseMessage]) -> str:
     return "\n".join(lines)
 
 
-def _load_long_term_memory(conversation_id: str) -> str:
+def _load_long_term_memory(conversation_id: str, auth_token: str | None = None) -> str:
     if not conversation_id:
         return "No long-term memory available."
     try:
+        db_client = get_supabase_client(auth_token) if auth_token else supabase
         result = (
-            supabase.table("messages")
+            db_client.table("messages")
             .select("role, content")
             .eq("conversation_id", conversation_id)
             .order("timestamp")
@@ -621,7 +623,9 @@ def retrieve(state: AgentState):
     # --- Retrieval with metrics ---
     retrieval_start = time.monotonic()
     short_term_memory = _format_short_term_memory(messages[:-1])
-    long_term_memory = _load_long_term_memory(state["conversation_id"])
+    long_term_memory = _load_long_term_memory(
+        state["conversation_id"], state.get("auth_token")
+    )
     vector_context, sources, has_evidence = _retrieve_with_sources(user_query)
     retrieval_latency_ms = (time.monotonic() - retrieval_start) * 1000
 

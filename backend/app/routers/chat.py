@@ -11,9 +11,9 @@ import uuid
 from typing import Any, List, Optional, cast
 
 from app.config import OPENAI_API_KEY
-from app.db.supabase_client import supabase
+from app.db.supabase_client import get_supabase_client, supabase
 from app.rag.graph import agent_graph
-from app.routers.auth import get_current_user_or_anonymous
+from app.routers.auth import get_current_user_or_anonymous, oauth2_scheme
 from app.utils.cache import (
     generate_cache_key,
     get_cached_response,
@@ -174,13 +174,13 @@ async def _initialize_anonymous_session_if_needed(
 
 
 def _create_conversation_if_needed(
-    convo_id: str, user_id: str, is_anonymous: bool, title: str
+    db_client: Any, convo_id: str, user_id: str, is_anonymous: bool, title: str
 ) -> None:
     if is_anonymous:
         return
 
     result = (
-        supabase.table("conversations")
+        db_client.table("conversations")
         .insert(
             {
                 "id": convo_id,
@@ -199,6 +199,7 @@ def _create_conversation_if_needed(
 
 
 def _save_chat_messages(
+    db_client: Any,
     convo_id: str,
     user_id: str,
     is_anonymous: bool,
@@ -208,7 +209,7 @@ def _save_chat_messages(
     if is_anonymous:
         return
 
-    supabase.table("messages").insert(
+    db_client.table("messages").insert(
         [
             {
                 "conversation_id": convo_id,
@@ -234,6 +235,7 @@ async def chat_endpoint(
     x_anonymous_id: Optional[str] = Header(None, description="Anonymous session ID"),
     x_request_id: Optional[str] = Header(None, description="Client-supplied correlation ID"),
     user_id: Optional[str] = Depends(get_current_user_or_anonymous),
+    token: Optional[str] = Depends(oauth2_scheme),
 ) -> ChatResponse:
     """
     Process a text chat message and return AI response.
@@ -251,6 +253,7 @@ async def chat_endpoint(
         )
 
         convo_id = request.conversation_id or str(uuid.uuid4())
+        db_client = get_supabase_client(token) if token else supabase
         log.info(
             "Processing text chat | user=%s | conversation=%s | anonymous=%s",
             resolved_user_id,
@@ -261,6 +264,7 @@ async def chat_endpoint(
         if not request.conversation_id:
             try:
                 _create_conversation_if_needed(
+                    db_client=db_client,
                     convo_id=convo_id,
                     user_id=resolved_user_id,
                     is_anonymous=is_anonymous,
@@ -298,6 +302,7 @@ async def chat_endpoint(
                 "conversation_id": convo_id,
                 "language": request.language,
                 "requested_language": request.language,
+                "auth_token": token,
             }
 
             result = agent_graph.invoke(
@@ -340,6 +345,7 @@ async def chat_endpoint(
                 )
             else:
                 _save_chat_messages(
+                    db_client=db_client,
                     convo_id=convo_id,
                     user_id=resolved_user_id,
                     is_anonymous=is_anonymous,
@@ -442,6 +448,7 @@ async def analyze_image(
     request: ImageRequest,
     x_anonymous_id: Optional[str] = Header(None, description="Anonymous session ID"),
     user_id: Optional[str] = Depends(get_current_user_or_anonymous),
+    token: Optional[str] = Depends(oauth2_scheme),
 ) -> ImageResponse:
     """
     Analyze an image using an OpenAI multimodal model with a health-focused prompt.
@@ -455,6 +462,7 @@ async def analyze_image(
         )
 
         convo_id = request.conversation_id or str(uuid.uuid4())
+        db_client = get_supabase_client(token) if token else supabase
         prompt = (
             request.message
             or "Analyze this image in the context of women's health. "
@@ -465,6 +473,7 @@ async def analyze_image(
         if not request.conversation_id:
             try:
                 _create_conversation_if_needed(
+                    db_client=db_client,
                     convo_id=convo_id,
                     user_id=resolved_user_id,
                     is_anonymous=is_anonymous,
@@ -534,6 +543,7 @@ async def analyze_image(
                 )
             else:
                 _save_chat_messages(
+                    db_client=db_client,
                     convo_id=convo_id,
                     user_id=resolved_user_id,
                     is_anonymous=is_anonymous,

@@ -8,8 +8,8 @@ import logging
 import uuid
 from typing import Any, Optional
 
-from app.db.supabase_client import supabase
-from app.routers.auth import get_current_user
+from app.db.supabase_client import get_supabase_client, supabase
+from app.routers.auth import get_current_user, oauth2_scheme
 from fastapi import APIRouter, Depends, Header, HTTPException, Query, status
 from pydantic import BaseModel, Field
 
@@ -77,9 +77,11 @@ def _safe_get(data: dict[str, Any], key: str, default: Any = None) -> Any:
     return default if value is None else value
 
 
-def _ensure_conversation_owner(conversation_id: str, user_id: str) -> dict[str, Any]:
+def _ensure_conversation_owner(
+    db_client: Any, conversation_id: str, user_id: str
+) -> dict[str, Any]:
     result = (
-        supabase.table("conversations")
+        db_client.table("conversations")
         .select("*")
         .eq("id", conversation_id)
         .eq("user_id", user_id)
@@ -160,6 +162,7 @@ def _group_messages_by_conversation(
 async def create_conversation(
     request: CreateConversationRequest,
     user_id: str = Depends(get_current_user),
+    token: str = Depends(oauth2_scheme),
 ) -> CreateConversationResponse:
     convo_id = str(uuid.uuid4())
     title = request.title.strip() if request.title else "New Conversation"
@@ -171,7 +174,8 @@ async def create_conversation(
     }
 
     try:
-        result = supabase.table("conversations").insert(data).execute()
+        db_client = get_supabase_client(token)
+        result = db_client.table("conversations").insert(data).execute()
         if not result.data:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -198,10 +202,12 @@ async def list_conversations(
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
     user_id: str = Depends(get_current_user),
+    token: str = Depends(oauth2_scheme),
 ) -> list[ConversationSummary]:
     try:
+        db_client = get_supabase_client(token)
         conversations_result = (
-            supabase.table("conversations")
+            db_client.table("conversations")
             .select("id, title, created_at, updated_at")
             .eq("user_id", user_id)
             .order("created_at", desc=True)
@@ -216,7 +222,7 @@ async def list_conversations(
         conversation_ids = [item["id"] for item in conversations]
 
         counts_result = (
-            supabase.table("messages")
+            db_client.table("messages")
             .select("conversation_id")
             .in_("conversation_id", conversation_ids)
             .execute()
@@ -254,12 +260,14 @@ async def list_conversations(
 async def get_conversation(
     conversation_id: str,
     user_id: str = Depends(get_current_user),
+    token: str = Depends(oauth2_scheme),
 ) -> ConversationDetail:
     try:
-        conversation = _ensure_conversation_owner(conversation_id, user_id)
+        db_client = get_supabase_client(token)
+        conversation = _ensure_conversation_owner(db_client, conversation_id, user_id)
 
         messages_result = (
-            supabase.table("messages")
+            db_client.table("messages")
             .select("id, role, content, timestamp")
             .eq("conversation_id", conversation_id)
             .order("timestamp")
@@ -297,12 +305,14 @@ async def list_conversation_messages(
     limit: int = Query(default=200, ge=1, le=1000),
     offset: int = Query(default=0, ge=0),
     user_id: str = Depends(get_current_user),
+    token: str = Depends(oauth2_scheme),
 ) -> list[MessageItem]:
     try:
-        _ensure_conversation_owner(conversation_id, user_id)
+        db_client = get_supabase_client(token)
+        _ensure_conversation_owner(db_client, conversation_id, user_id)
 
         result = (
-            supabase.table("messages")
+            db_client.table("messages")
             .select("id, role, content, timestamp")
             .eq("conversation_id", conversation_id)
             .order("timestamp")
@@ -335,13 +345,15 @@ async def update_conversation_title(
     conversation_id: str,
     request: UpdateConversationRequest,
     user_id: str = Depends(get_current_user),
+    token: str = Depends(oauth2_scheme),
 ) -> CreateConversationResponse:
     try:
-        _ensure_conversation_owner(conversation_id, user_id)
+        db_client = get_supabase_client(token)
+        _ensure_conversation_owner(db_client, conversation_id, user_id)
 
         title = request.title.strip()
         result = (
-            supabase.table("conversations")
+            db_client.table("conversations")
             .update({"title": title})
             .eq("id", conversation_id)
             .eq("user_id", user_id)
@@ -381,6 +393,7 @@ async def merge_anonymous_history(
     x_anonymous_id: Optional[str] = Header(
         None, description="Optional anonymous session ID"
     ),
+    token: str = Depends(oauth2_scheme),
 ) -> MergeAnonymousHistoryResponse:
     anonymous_id = request.anonymous_id.strip() or (x_anonymous_id or "").strip()
     if not anonymous_id:
@@ -390,6 +403,7 @@ async def merge_anonymous_history(
         )
 
     try:
+        db_client = get_supabase_client(token)
         anonymous_rows = _fetch_anonymous_messages(anonymous_id)
         if not anonymous_rows:
             return MergeAnonymousHistoryResponse(
@@ -415,7 +429,7 @@ async def merge_anonymous_history(
             )
 
             conversation_insert = (
-                supabase.table("conversations")
+                db_client.table("conversations")
                 .insert(
                     {
                         "id": new_conversation_id,
@@ -443,7 +457,7 @@ async def merge_anonymous_history(
             ]
 
             if message_payload:
-                supabase.table("messages").insert(message_payload).execute()
+                db_client.table("messages").insert(message_payload).execute()
                 imported_messages += len(message_payload)
 
             imported_conversations += 1
@@ -469,14 +483,16 @@ async def merge_anonymous_history(
 async def delete_conversation(
     conversation_id: str,
     user_id: str = Depends(get_current_user),
+    token: str = Depends(oauth2_scheme),
 ) -> dict[str, str]:
     try:
-        _ensure_conversation_owner(conversation_id, user_id)
+        db_client = get_supabase_client(token)
+        _ensure_conversation_owner(db_client, conversation_id, user_id)
 
-        supabase.table("messages").delete().eq(
+        db_client.table("messages").delete().eq(
             "conversation_id", conversation_id
         ).execute()
-        supabase.table("conversations").delete().eq("id", conversation_id).eq(
+        db_client.table("conversations").delete().eq("id", conversation_id).eq(
             "user_id", user_id
         ).execute()
 
