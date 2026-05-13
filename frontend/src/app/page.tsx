@@ -12,7 +12,7 @@ import { ChatInput } from "@/components/chat/ChatInput";
 import { ChatMessage } from "@/components/chat/ChatMessage";
 import { AuthModal } from "@/components/chat/AuthModal";
 import { Button } from "@/components/ui/button";
-import { HeartPulse, Menu, ShieldCheck, Sparkles, X } from "lucide-react";
+import { HeartPulse, LogOut, Menu, Sparkles, UserRound, X } from "lucide-react";
 import {
   clearAnonymousHistoryFromStorage,
   getSupabaseClient,
@@ -368,6 +368,35 @@ function fromStoredConversations(
   }));
 }
 
+function getUserDisplayName(
+  user:
+    | {
+        email?: string | null;
+        user_metadata?: Record<string, unknown> | null;
+      }
+    | null
+    | undefined,
+) {
+  if (!user) return null;
+
+  const metadata = user.user_metadata ?? {};
+  const metadataName =
+    typeof metadata.full_name === "string"
+      ? metadata.full_name
+      : typeof metadata.name === "string"
+        ? metadata.name
+        : null;
+
+  if (metadataName?.trim()) {
+    return metadataName.trim();
+  }
+
+  const email = user.email?.trim();
+  if (!email) return null;
+
+  return email.split("@")[0] || email;
+}
+
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -376,6 +405,7 @@ export default function ChatPage() {
   >(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userDisplayName, setUserDisplayName] = useState<string | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [anonymousId, setAnonymousId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -1116,6 +1146,7 @@ export default function ChatPage() {
   const handleLogout = useCallback(async () => {
     if (!isSupabaseConfigured()) {
       setIsLoggedIn(false);
+      setUserDisplayName(null);
       setConversations([]);
       setMessages([]);
       setActiveConversationId(null);
@@ -1128,6 +1159,7 @@ export default function ChatPage() {
     const supabase = getSupabaseClient();
     await supabase.auth.signOut();
     setIsLoggedIn(false);
+    setUserDisplayName(null);
     setConversations([]);
     setMessages([]);
     setActiveConversationId(null);
@@ -1140,6 +1172,7 @@ export default function ChatPage() {
     const checkAuth = async () => {
       if (!isSupabaseConfigured()) {
         setIsLoggedIn(false);
+        setUserDisplayName(null);
         loadAnonymousConversations();
         return;
       }
@@ -1150,6 +1183,7 @@ export default function ChatPage() {
       } = await supabase.auth.getUser();
       const authenticated = !!user;
       setIsLoggedIn(authenticated);
+      setUserDisplayName(getUserDisplayName(user));
 
       if (!authenticated) {
         loadAnonymousConversations();
@@ -1169,8 +1203,10 @@ export default function ChatPage() {
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
       const isAuthenticated = !!session?.user;
       setIsLoggedIn(isAuthenticated);
+      setUserDisplayName(getUserDisplayName(session?.user));
 
       if (!isAuthenticated) {
+        setUserDisplayName(null);
         setConversations([]);
         setMessages([]);
         setActiveConversationId(null);
@@ -1349,18 +1385,6 @@ export default function ChatPage() {
               </h1>
             </div>
 
-            <nav className="hidden items-center gap-1 rounded-full border border-zinc-200/80 bg-white/80 p-1 text-sm shadow-sm dark:border-white/10 dark:bg-white/5 md:flex">
-              <button className="rounded-full bg-zinc-950 px-3 py-1.5 text-white dark:bg-white dark:text-zinc-950">
-                Chat
-              </button>
-              <button className="rounded-full px-3 py-1.5 text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-white">
-                History
-              </button>
-              <button className="rounded-full px-3 py-1.5 text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-white">
-                Languages
-              </button>
-            </nav>
-
             {!isLoggedIn && (
               <Button
                 variant="default"
@@ -1373,9 +1397,31 @@ export default function ChatPage() {
             )}
 
             {isLoggedIn && (
-              <div className="hidden items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-300 sm:flex">
-                <ShieldCheck className="h-4 w-4" />
-                Saved
+              <div className="flex min-w-0 items-center gap-2">
+                <div className="hidden min-w-0 items-center gap-2 rounded-full border border-zinc-200/80 bg-white/85 py-1 pl-1 pr-3 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5 sm:flex">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-700 text-white dark:bg-teal-400 dark:text-zinc-950">
+                    <UserRound className="h-4 w-4" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-[0.68rem] font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                      Signed in
+                    </span>
+                    <span className="block max-w-32 truncate text-sm font-semibold text-zinc-900 dark:text-zinc-50 md:max-w-44">
+                      {userDisplayName ?? "User"}
+                    </span>
+                  </span>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-10 gap-2 rounded-full border-zinc-200/80 bg-white/85 px-3 shadow-sm hover:border-red-200 hover:bg-red-50 hover:text-red-700 dark:border-white/10 dark:bg-white/5 dark:hover:border-red-400/30 dark:hover:bg-red-400/10 dark:hover:text-red-200"
+                  onClick={() => void handleLogout()}
+                  aria-label={copy.logout}
+                  title={copy.logout}
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span className="hidden sm:inline">{copy.logout}</span>
+                </Button>
               </div>
             )}
           </div>
