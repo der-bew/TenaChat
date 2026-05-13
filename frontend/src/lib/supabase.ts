@@ -43,6 +43,31 @@ export function getSupabaseClient() {
   return supabaseClient;
 }
 
+export async function getValidSupabaseSession() {
+  if (!isSupabaseConfigured()) {
+    return null;
+  }
+
+  const supabase = getSupabaseClient();
+
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
+
+  if (sessionError || !session?.access_token) {
+    return null;
+  }
+
+  const { data, error } = await supabase.auth.getUser(session.access_token);
+  if (error || !data.user) {
+    await supabase.auth.signOut();
+    return null;
+  }
+
+  return session;
+}
+
 const ANONYMOUS_CONVERSATIONS_KEY = "anonymousConversations";
 const AUTH_ERROR_FALLBACKS: Record<SupportedLanguage, string> = {
   en: "Authentication failed. Please try again.",
@@ -210,12 +235,7 @@ async function getAccessTokenFromSession(
     return null;
   }
 
-  const supabase = getSupabaseClient();
-
-  const {
-    data: { session: currentSession },
-  } = await supabase.auth.getSession();
-
+  const currentSession = await getValidSupabaseSession();
   return currentSession?.access_token ?? null;
 }
 

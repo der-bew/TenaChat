@@ -17,6 +17,7 @@ import {
   clearAnonymousHistoryFromStorage,
   getSupabaseClient,
   getAnonymousHistoryFromStorage,
+  getValidSupabaseSession,
   isSupabaseConfigured,
   saveAnonymousHistoryToStorage,
   syncAnonymousHistoryToBackend,
@@ -444,10 +445,7 @@ export default function ChatPage() {
 
     if (isSupabaseConfigured()) {
       try {
-        const supabase = getSupabaseClient();
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
+        const session = await getValidSupabaseSession();
 
         if (session?.access_token) {
           headers.Authorization = `Bearer ${session.access_token}`;
@@ -485,10 +483,7 @@ export default function ChatPage() {
           return;
         }
 
-        const supabase = getSupabaseClient();
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
+        const session = await getValidSupabaseSession();
 
         const accessToken = session?.access_token;
         if (!accessToken) return;
@@ -548,10 +543,7 @@ export default function ChatPage() {
           return;
         }
 
-        const supabase = getSupabaseClient();
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
+        const session = await getValidSupabaseSession();
 
         const accessToken = session?.access_token;
         if (!accessToken) {
@@ -654,10 +646,7 @@ export default function ChatPage() {
           throw new Error("Supabase is not configured.");
         }
 
-        const supabase = getSupabaseClient();
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
+        const session = await getValidSupabaseSession();
 
         const accessToken = session?.access_token;
         if (!accessToken) {
@@ -1034,25 +1023,40 @@ export default function ChatPage() {
             throw new Error("Supabase is not configured.");
           }
 
-          const supabase = getSupabaseClient();
-          const {
-            data: { session },
-          } = await supabase.auth.getSession();
-
+          const session = await getValidSupabaseSession();
           const accessToken = session?.access_token;
-          if (accessToken) {
-            await fetch(
-              `${API_BASE_URL}/api/conversations/conversations/${id}`,
-              {
-                method: "DELETE",
-                headers: {
-                  Authorization: `Bearer ${accessToken}`,
-                },
+          if (!accessToken) {
+            setIsLoggedIn(false);
+            setUserDisplayName(null);
+            hasLoadedSavedConversationsRef.current = false;
+            return;
+          }
+
+          const response = await fetch(
+            `${API_BASE_URL}/api/conversations/conversations/${id}`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
               },
-            );
+            },
+          );
+
+          if (response.status === 401 || response.status === 403) {
+            const supabase = getSupabaseClient();
+            await supabase.auth.signOut();
+            setIsLoggedIn(false);
+            setUserDisplayName(null);
+            hasLoadedSavedConversationsRef.current = false;
+            return;
+          }
+
+          if (!response.ok) {
+            throw new Error("Failed to delete conversation");
           }
         } catch (error) {
           console.error("Error deleting conversation:", error);
+          return;
         }
       }
 
@@ -1102,10 +1106,7 @@ export default function ChatPage() {
         return;
       }
 
-      const supabase = getSupabaseClient();
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      const session = await getValidSupabaseSession();
 
       const result = await syncAnonymousHistoryToBackend(API_BASE_URL, session);
 
