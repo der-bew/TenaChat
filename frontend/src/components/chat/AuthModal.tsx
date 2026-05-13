@@ -12,7 +12,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase";
+import {
+  getLocalizedSupabaseAuthError,
+  getSupabaseClient,
+  isSupabaseConfigured,
+} from "@/lib/supabase";
 import { HeartPulse, Loader2 } from "lucide-react";
 
 type SupportedLanguage = "en" | "am" | "om" | "ti";
@@ -120,6 +124,7 @@ export function AuthModal({
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [status, setStatus] = useState("");
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
 
   const copy = useMemo(() => COPY[language] ?? COPY.en, [language]);
@@ -127,6 +132,7 @@ export function AuthModal({
   const handleAuth = async (type: "login" | "signup") => {
     setIsLoading(true);
     setError("");
+    setStatus("");
 
     try {
       if (!isSupabaseConfigured()) {
@@ -136,8 +142,16 @@ export function AuthModal({
       const supabase = getSupabaseClient();
 
       if (type === "signup") {
-        const { error } = await supabase.auth.signUp({ email, password });
+        const { data, error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
+
+        if (!data.session) {
+          setStatus(copy.signupSuccess);
+          setEmail("");
+          setPassword("");
+          setActiveTab("login");
+          return;
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
@@ -152,9 +166,7 @@ export function AuthModal({
       setPassword("");
       setActiveTab("login");
     } catch (err: unknown) {
-      const message =
-        err instanceof Error && err.message ? err.message : copy.authFailed;
-      setError(message);
+      setError(getLocalizedSupabaseAuthError(err, language));
     } finally {
       setIsLoading(false);
     }
@@ -177,7 +189,9 @@ export function AuthModal({
             <HeartPulse className="h-6 w-6" />
           </div>
           <DialogTitle className="text-xl">{copy.title}</DialogTitle>
-          <DialogDescription className="max-w-sm">{copy.description}</DialogDescription>
+          <DialogDescription className="max-w-sm">
+            {copy.description}
+          </DialogDescription>
         </DialogHeader>
 
         <Tabs
@@ -190,11 +204,17 @@ export function AuthModal({
             <TabsTrigger value="signup">{copy.signupTab}</TabsTrigger>
           </TabsList>
 
+          {status && (
+            <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700 dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-200">
+              {status}
+            </p>
+          )}
+
           <TabsContent value="login">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                handleAuth("login");
+                void handleAuth("login");
               }}
               className="space-y-4"
             >
@@ -238,7 +258,7 @@ export function AuthModal({
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                handleAuth("signup");
+                void handleAuth("signup");
               }}
               className="space-y-4"
             >

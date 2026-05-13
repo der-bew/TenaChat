@@ -184,7 +184,7 @@ const UI_COPY: Record<SupportedLanguage, UiCopy> = {
       "ስለ የእናቶች ጤና፣ የቤተሰብ ዕቅድ፣ የመራቢያ ጤና እና የሴቶች ጤና በኢትዮጵያ የሚመለከቱ ጥያቄዎችን ይጠይቁ።",
     signInToSave: "ውይይቶችን ለማስቀመጥ ይግቡ",
     newChat: "አዲስ ውይይት",
-    appTitle: "የኢትዮጵያ የሴቶች ጤና",
+    appTitle: "TenaChat",
     noConversations: "እስካሁን ምንም ውይይት የለም",
     footerTitle: "TenaChat",
     footerSupport: "እንግሊዝኛ፣ አማርኛ፣ Afaan Oromo እና ትግርኛን ይደግፋል",
@@ -226,7 +226,7 @@ const UI_COPY: Record<SupportedLanguage, UiCopy> = {
       "Waa'ee fayyaa haadholii, karoora maatii, fayyaa hormaataa fi fayyaa dubartootaa Itoophiyaa keessatti gaafachuu dandeessu.",
     signInToSave: "Marii kuusuuuf seeni",
     newChat: "Marii Haaraa",
-    appTitle: "Fayyaa Dubartootaa Itoophiyaa",
+    appTitle: "TenaChat",
     noConversations: "Marii amma hin jiru",
     footerTitle: "TenaChat",
     footerSupport: "English, አማርኛ, Afaan Oromo fi ትግርኛ ni deeggara",
@@ -272,7 +272,7 @@ const UI_COPY: Record<SupportedLanguage, UiCopy> = {
       "ብዛዕባ ጥዕና ኣዴታት፣ ውጥን ስድራ፣ ጥዕና ምውላድን ጥዕና ደቂ ኣንስትዮን ኣብ ኢትዮጵያ ሕቶታት ክትሓቱ ትኽእሉ።",
     signInToSave: "ዝርርብ ንምዕቃብ እተኣተዉ",
     newChat: "ሓድሽ ዝርርብ",
-    appTitle: "ጥዕና ደቂ ኣንስትዮ ኢትዮጵያ",
+    appTitle: "TenaChat",
     noConversations: "ዛጊት ዝርርብ የለን",
     footerTitle: "TenaChat",
     footerSupport: "English, አማርኛ, Afaan Oromo እና ትግርኛ ይድግፍ",
@@ -1521,6 +1521,7 @@ export default function ChatPage() {
         onOpenChange={setShowAuthModal}
         onAuthSuccess={() => {
           setIsLoggedIn(true);
+          hasLoadedSavedConversationsRef.current = true;
           void syncAnonymousHistoryAfterLogin();
           void loadSavedConversations();
         }}
