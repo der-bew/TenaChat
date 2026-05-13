@@ -3,19 +3,11 @@ import { createClient, type Session } from "@supabase/supabase-js";
 export const SUPPORTED_LANGUAGES = ["en", "am", "om", "ti"] as const;
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
-export interface AnonymousHistoryAttachment {
-  type: "image";
-  url: string;
-  name?: string;
-  mimeType?: string;
-}
-
 export interface AnonymousHistoryMessage {
   id: string;
   role: "user" | "assistant" | "system";
   content: string;
   timestamp?: string;
-  attachment?: AnonymousHistoryAttachment;
 }
 
 export interface AnonymousHistoryConversation {

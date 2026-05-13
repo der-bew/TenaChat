@@ -3,19 +3,16 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Mic, Image, Loader2, Trash2 } from "lucide-react";
+import { Send, Mic, Loader2 } from "lucide-react";
 
 type SupportedLanguage = "en" | "am" | "om" | "ti";
 
 interface ChatInputLabels {
   placeholder: string;
   recording: string;
-  newImageAlt: string;
   send: string;
   selectLanguage: string;
-  imageButton: string;
   voiceButton: string;
-  removeImage: string;
   english: string;
   amharic: string;
   oromo: string;
@@ -25,11 +22,8 @@ interface ChatInputLabels {
 interface ChatInputProps {
   onSendMessage: (
     message: string,
-    image?: string,
     metadata?: {
       language: SupportedLanguage;
-      imageName?: string;
-      imageMimeType?: string;
     },
   ) => void;
   onSendVoice: (
@@ -45,12 +39,9 @@ const LABELS: Record<SupportedLanguage, ChatInputLabels> = {
   en: {
     placeholder: "Message the chatbot...",
     recording: "Recording...",
-    newImageAlt: "Preview",
     send: "Send",
     selectLanguage: "Language",
-    imageButton: "Upload image",
     voiceButton: "Record voice",
-    removeImage: "Remove image",
     english: "English",
     amharic: "አማርኛ",
     oromo: "Afaan Oromo",
@@ -59,12 +50,9 @@ const LABELS: Record<SupportedLanguage, ChatInputLabels> = {
   am: {
     placeholder: "ለቻትቦቱ መልዕክት ይጻፉ...",
     recording: "በመቅዳት ላይ...",
-    newImageAlt: "ቅድመ እይታ",
     send: "ላክ",
     selectLanguage: "ቋንቋ",
-    imageButton: "ምስል ጫን",
     voiceButton: "ድምፅ ቅዳ",
-    removeImage: "ምስሉን አስወግድ",
     english: "English",
     amharic: "አማርኛ",
     oromo: "Afaan Oromo",
@@ -73,12 +61,9 @@ const LABELS: Record<SupportedLanguage, ChatInputLabels> = {
   om: {
     placeholder: "Ergaa gara chatbot tti barreessi...",
     recording: "Sagalee waraabaa jira...",
-    newImageAlt: "Durargii",
     send: "Ergi",
     selectLanguage: "Afaan",
-    imageButton: "Suuraa olkaa'i",
     voiceButton: "Sagalee waraabi",
-    removeImage: "Suuraa keessaa haqi",
     english: "English",
     amharic: "አማርኛ",
     oromo: "Afaan Oromo",
@@ -87,12 +72,9 @@ const LABELS: Record<SupportedLanguage, ChatInputLabels> = {
   ti: {
     placeholder: "መልእኽቲ ናብ ቻትቦት ጽሓፍ...",
     recording: "ድምጺ ብምቕዳሕ ላይ...",
-    newImageAlt: "ቅድመ ርእይቶ",
     send: "ስደድ",
     selectLanguage: "ቋንቋ",
-    imageButton: "ስእሊ ጽዓን",
     voiceButton: "ድምጺ ቅዳሕ",
-    removeImage: "ስእሊ ኣውጽእ",
     english: "English",
     amharic: "አማርኛ",
     oromo: "Afaan Oromo",
@@ -108,13 +90,9 @@ export function ChatInput({
   selectedLanguage = "en",
 }: ChatInputProps) {
   const [message, setMessage] = useState("");
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imageName, setImageName] = useState<string | null>(null);
-  const [imageMimeType, setImageMimeType] = useState<string | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -149,51 +127,19 @@ export function ChatInput({
 
   const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
-    if ((!message.trim() && !imagePreview) || disabled) return;
+    if (!message.trim() || disabled) return;
 
-    onSendMessage(message, imagePreview || undefined, {
+    onSendMessage(message, {
       language: selectedLanguage,
-      imageName: imageName ?? undefined,
-      imageMimeType: imageMimeType ?? undefined,
     });
 
     setMessage("");
-    setImagePreview(null);
-    setImageName(null);
-    setImageMimeType(null);
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
-    }
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result as string);
-      setImageName(file.name);
-      setImageMimeType(file.type || "image/jpeg");
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const removeImage = () => {
-    setImagePreview(null);
-    setImageName(null);
-    setImageMimeType(null);
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
     }
   };
 
@@ -247,54 +193,7 @@ export function ChatInput({
 
   return (
     <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200/80 bg-white/90 p-2 shadow-[0_18px_50px_rgba(15,23,42,0.10)] backdrop-blur-xl dark:border-white/10 dark:bg-white/5">
-      {imagePreview && (
-        <div className="relative w-fit px-1 pt-1">
-          <img
-            src={imagePreview}
-            alt={labels.newImageAlt}
-            className="max-h-32 rounded-xl border border-zinc-200 object-cover dark:border-white/10"
-          />
-          {imageName && (
-            <div className="mt-1 max-w-40 truncate text-xs text-zinc-500">
-              {imageName}
-            </div>
-          )}
-          <Button
-            type="button"
-            variant="destructive"
-            size="icon"
-            className="absolute -right-2 -top-2 h-6 w-6"
-            onClick={removeImage}
-            aria-label={labels.removeImage}
-            title={labels.removeImage}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
-
       <form onSubmit={handleSubmit} className="flex items-end gap-2">
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleImageUpload}
-          accept="image/*"
-          className="hidden"
-        />
-
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={disabled || isLoading}
-          aria-label={labels.imageButton}
-          title={labels.imageButton}
-          className="h-11 w-11 shrink-0 rounded-xl text-zinc-500 hover:bg-teal-50 hover:text-teal-700 dark:text-zinc-300 dark:hover:bg-teal-400/10 dark:hover:text-teal-200"
-        >
-          <Image className="h-5 w-5" />
-        </Button>
-
         <div className="relative flex-1">
           <Textarea
             ref={textareaRef}
@@ -337,9 +236,7 @@ export function ChatInput({
 
         <Button
           type="submit"
-          disabled={
-            disabled || (!message.trim() && !imagePreview) || isRecording
-          }
+          disabled={disabled || !message.trim() || isRecording}
           className="h-11 w-11 shrink-0 rounded-xl bg-teal-700 p-0 shadow-sm hover:bg-teal-800 dark:bg-teal-400 dark:text-zinc-950 dark:hover:bg-teal-300"
           aria-label={labels.send}
           title={labels.send}

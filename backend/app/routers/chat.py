@@ -6,6 +6,7 @@ author: Derbew Felasman
 
 import base64
 import logging
+import os
 import tempfile
 import uuid
 from typing import Any, List, Optional, cast
@@ -29,6 +30,7 @@ from pydantic import BaseModel, Field, validator
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+OPENAI_TRANSCRIPTION_MODEL = os.getenv("OPENAI_TRANSCRIPTION_MODEL", "gpt-4o-transcribe")
 
 TRANSCRIPTION_LANGUAGE_HINTS = {
     "en": "en",
@@ -78,19 +80,6 @@ class SpeechRequest(BaseModel):
     )
 
 
-class ImageRequest(BaseModel):
-    image_base64: str = Field(..., description="Base64 encoded image")
-    message: Optional[str] = Field(None, description="Optional text prompt")
-    language: str = Field("en", description="Response language")
-    conversation_id: Optional[str] = Field(None, description="Optional conversation ID")
-
-    @validator("conversation_id")
-    def validate_image_conversation_id(cls, v: Optional[str]) -> Optional[str]:
-        if v and not validate_uuid(v):
-            raise ValueError("Invalid conversation ID format")
-        return v
-
-
 class ChatResponse(BaseModel):
     response: str
     conversation_id: str
@@ -105,11 +94,6 @@ class ChatResponse(BaseModel):
 class SpeechResponse(BaseModel):
     text: str
     detected_language: Optional[str] = None
-
-
-class ImageResponse(BaseModel):
-    response: str
-    conversation_id: str
 
 
 def _require_openai_client() -> OpenAI:
@@ -142,16 +126,6 @@ def _normalize_audio_suffix(audio_format: str) -> str:
             detail=f"Unsupported audio format: {audio_format}",
         )
     return f".{normalized}"
-
-
-def _normalize_image_mime(payload: str) -> str:
-    if payload.startswith("data:image/"):
-        header = payload.split(",", 1)[0]
-        mime = header.removeprefix("data:").split(";", 1)[0].strip().lower()
-        allowed = {"image/jpeg", "image/png", "image/webp", "image/gif"}
-        if mime in allowed:
-            return mime
-    return "image/jpeg"
 
 
 def _get_or_create_user_id(
@@ -430,7 +404,7 @@ async def speech_to_text(
 
             with open(tmp.name, "rb") as audio_file:
                 transcription_kwargs: dict[str, Any] = {
-                    "model": "whisper-1",
+                    "model": OPENAI_TRANSCRIPTION_MODEL,
                     "file": audio_file,
                 }
                 normalized_language_hint = _normalize_transcription_language_hint(
@@ -464,128 +438,6 @@ async def speech_to_text(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to process audio",
-        ) from e
-
-
-@router.post("/image", response_model=ImageResponse)
-async def analyze_image(
-    request: ImageRequest,
-    x_anonymous_id: Optional[str] = Header(None, description="Anonymous session ID"),
-    user_id: Optional[str] = Depends(get_current_user_or_anonymous),
-    token: Optional[str] = Depends(oauth2_scheme),
-) -> ImageResponse:
-    """
-    Analyze an image using an OpenAI multimodal model with a health-focused prompt.
-    """
-    try:
-        resolved_user_id, is_anonymous = _get_or_create_user_id(user_id, x_anonymous_id)
-        await _initialize_anonymous_session_if_needed(
-            is_anonymous=is_anonymous,
-            x_anonymous_id=x_anonymous_id,
-            user_id=resolved_user_id,
-        )
-
-        convo_id = request.conversation_id or str(uuid.uuid4())
-        db_client = get_supabase_client(token) if token else supabase
-        prompt = (
-            request.message
-            or "Analyze this image in the context of women's health. "
-            "Describe only visible findings, avoid overclaiming, and advise the user "
-            "to seek professional care for diagnosis."
-        )
-
-        if not request.conversation_id:
-            try:
-                _create_conversation_if_needed(
-                    db_client=db_client,
-                    convo_id=convo_id,
-                    user_id=resolved_user_id,
-                    is_anonymous=is_anonymous,
-                    title=prompt,
-                )
-            except HTTPException:
-                raise
-            except Exception as e:
-                logger.error("Error creating image conversation: %s", e, exc_info=True)
-                raise HTTPException(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail="Failed to create conversation",
-                ) from e
-
-        client = _require_openai_client()
-        image_data = _decode_base64_payload(request.image_base64)
-        image_b64 = base64.b64encode(image_data).decode("utf-8")
-        image_mime = _normalize_image_mime(request.image_base64)
-
-        completion = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You are a helpful, safety-conscious women's health assistant. "
-                        "Respond in Markdown. If the image is medical or health-related, "
-                        "describe what is visible, mention uncertainty where appropriate, "
-                        "and recommend professional medical evaluation when needed. "
-                        "If the image is unrelated to health, respond briefly and say you can "
-                        "help with health-related image questions. "
-                        "Always respond in the user's requested language when possible. "
-                        "For Amharic, Afaan Oromo, and Tigrinya, use natural phrasing and clear formatting."
-                    ),
-                },
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": (
-                                f"Requested response language: {request.language}\n\n"
-                                f"User prompt: {prompt}"
-                            ),
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:{image_mime};base64,{image_b64}",
-                            },
-                        },
-                    ],
-                },
-            ],
-        )
-
-        response = (
-            completion.choices[0].message.content.strip()
-            if completion.choices and completion.choices[0].message.content
-            else "I could not analyze that image."
-        )
-
-        try:
-            if is_anonymous:
-                await save_anonymous_session(
-                    resolved_user_id, convo_id, f"[image] {prompt}", response
-                )
-            else:
-                _save_chat_messages(
-                    db_client=db_client,
-                    convo_id=convo_id,
-                    user_id=resolved_user_id,
-                    is_anonymous=is_anonymous,
-                    user_message=f"[image] {prompt}",
-                    assistant_message=response,
-                )
-        except Exception as e:
-            logger.error("Error saving image analysis messages: %s", e, exc_info=True)
-
-        return ImageResponse(response=response, conversation_id=convo_id)
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error("Error analyzing image: %s", e, exc_info=True)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to process image",
         ) from e
 
 

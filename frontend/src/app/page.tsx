@@ -25,19 +25,11 @@ import { cn } from "@/lib/utils";
 
 type SupportedLanguage = "en" | "am" | "om" | "ti";
 
-interface MessageAttachment {
-  type: "image";
-  url: string;
-  name?: string;
-  mimeType?: string;
-}
-
 interface Message {
   id: string;
   role: "user" | "assistant" | "system";
   content: string;
   timestamp?: Date;
-  attachment?: MessageAttachment;
   sources?: Array<{ source: string; file_type?: string }>;
   isPending?: boolean;
 }
@@ -81,11 +73,6 @@ interface ChatApiResponse {
   triage_level?: string | null;
 }
 
-interface ImageApiResponse {
-  response: string;
-  conversation_id: string;
-}
-
 interface SpeechApiResponse {
   text: string;
   detected_language?: string | null;
@@ -98,8 +85,6 @@ interface RenameConversationResponse {
 
 interface InputMetadata {
   language: SupportedLanguage;
-  imageName?: string;
-  imageMimeType?: string;
 }
 
 interface VoiceMetadata {
@@ -134,7 +119,6 @@ interface UiCopy {
   errorAudioRead: string;
   errorNoSpeech: string;
   errorAudioProcess: string;
-  imageAnalysisFallback: string;
   renameConversation: string;
   renamePrompt: string;
   renameFailed: string;
@@ -179,7 +163,6 @@ const UI_COPY: Record<SupportedLanguage, UiCopy> = {
     errorNoSpeech: "No speech was detected. Please try speaking again.",
     errorAudioProcess:
       "Sorry, the audio could not be processed. Please try again.",
-    imageAnalysisFallback: "Please analyze this health-related image.",
     renameConversation: "Rename conversation",
     renamePrompt: "Enter a new title for this conversation:",
     renameFailed: "Failed to rename conversation.",
@@ -223,7 +206,6 @@ const UI_COPY: Record<SupportedLanguage, UiCopy> = {
     errorAudioRead: "የተቀዳውን ድምፅ ማንበብ አልተቻለም። እባክዎ እንደገና ይሞክሩ።",
     errorNoSpeech: "ምንም ድምፅ አልተገኘም። እባክዎ እንደገና ይናገሩ።",
     errorAudioProcess: "ይቅርታ፣ ድምፁን ማስኬድ አልተቻለም። እባክዎ እንደገና ይሞክሩ።",
-    imageAnalysisFallback: "እባክዎ ይህን ከጤና ጋር የተያያዘ ምስል ይተንትኑ።",
     renameConversation: "ውይይቱን እንደገና ስም ስጥ",
     renamePrompt: "አዲስ የውይይቱን ርዕስ ያስገቡ፦",
     renameFailed: "የውይይቱን ርዕስ መቀየር አልተቻለም።",
@@ -268,7 +250,6 @@ const UI_COPY: Record<SupportedLanguage, UiCopy> = {
     errorNoSpeech: "Sagaleen hin argamne. Mee irra deebi'ii dubbadhu.",
     errorAudioProcess:
       "Dhiifama, sagaleen sun hojjetamuu hin dandeenye. Mee irra deebi'ii yaali.",
-    imageAnalysisFallback: "Mee suuraa fayyaa waliin walqabatu kana xiinxali.",
     renameConversation: "Maqaa marichaa jijjiiri",
     renamePrompt: "Maqaa haaraa marii kanaaf galchi:",
     renameFailed: "Maqaa marii jijjiiruun hin milkoofne.",
@@ -313,7 +294,6 @@ const UI_COPY: Record<SupportedLanguage, UiCopy> = {
     errorAudioRead: "ዝተቐድሐ ድምጺ ከንብብ ኣይተኻእለን። እንደገና ፈትኑ።",
     errorNoSpeech: "ድምጺ ኣይተረኽበን። እንደገና ተዛረቡ።",
     errorAudioProcess: "ይቕረታ፣ እቲ ድምጺ ክሰርሕ ኣይተኻእለን። እንደገና ፈትኑ።",
-    imageAnalysisFallback: "በጃኹም ነዚ ምስሊ ምስ ጥዕና ብተኣሳሰረ መልክዕ ተንትኑ።",
     renameConversation: "ስም ዝርርቡ ቀይር",
     renamePrompt: "ሓድሽ ርእሲ ናይዚ ዝርርብ ኣእቱ:",
     renameFailed: "ስም ዝርርቡ ምቕያር ኣይተሳኸዐን።",
@@ -373,7 +353,6 @@ function toStoredConversations(conversations: Conversation[]) {
       role: message.role,
       content: message.content,
       timestamp: message.timestamp?.toISOString(),
-      attachment: message.attachment,
     })),
   }));
 }
@@ -390,7 +369,6 @@ function fromStoredConversations(
       role: message.role,
       content: message.content,
       timestamp: message.timestamp ? new Date(message.timestamp) : new Date(),
-      attachment: message.attachment,
     })),
   }));
 }
@@ -792,52 +770,10 @@ export default function ChatPage() {
     [activeConversationId, getRequestHeaders],
   );
 
-  const sendImageMessage = useCallback(
-    async (
-      content: string,
-      image: string,
-      metadata?: InputMetadata,
-    ): Promise<ImageApiResponse> => {
-      const imageBase64 = image.includes(",") ? image.split(",")[1] : image;
-      const headers = await getRequestHeaders();
-
-      const response = await fetch(`${API_BASE_URL}/api/chat/image`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          image_base64: imageBase64,
-          message: content || copy.imageAnalysisFallback,
-          language: metadata?.language ?? selectedLanguage,
-          ...(activeConversationId && {
-            conversation_id: activeConversationId,
-          }),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          await getResponseErrorMessage(response, "Failed to analyze image"),
-        );
-      }
-
-      const data = (await response.json()) as ImageApiResponse;
-      if (!data.response || typeof data.response !== "string") {
-        throw new Error("The image service returned an empty response.");
-      }
-      return data;
-    },
-    [
-      activeConversationId,
-      copy.imageAnalysisFallback,
-      getRequestHeaders,
-      selectedLanguage,
-    ],
-  );
-
   const sendMessage = useCallback(
-    async (content: string, image?: string, metadata?: InputMetadata) => {
+    async (content: string, metadata?: InputMetadata) => {
       const trimmedContent = content.trim();
-      if (!trimmedContent && !image) return;
+      if (!trimmedContent) return;
 
       const language = metadata?.language ?? selectedLanguage;
       const requestId =
@@ -850,16 +786,8 @@ export default function ChatPage() {
       const userMessage: Message = {
         id: userMessageId,
         role: "user",
-        content: trimmedContent || copy.imageAnalysisFallback,
+        content: trimmedContent,
         timestamp: new Date(),
-        attachment: image
-          ? {
-              type: "image",
-              url: image,
-              name: metadata?.imageName,
-              mimeType: metadata?.imageMimeType,
-            }
-          : undefined,
       };
       const pendingMessage: Message = {
         id: pendingMessageId,
@@ -873,9 +801,7 @@ export default function ChatPage() {
       setIsLoading(true);
 
       try {
-        const data = image
-          ? await sendImageMessage(trimmedContent, image, metadata)
-          : await sendTextMessage(trimmedContent, language);
+        const data = await sendTextMessage(trimmedContent, language);
 
         const assistantMessage: Message = {
           id: `msg_${requestId}_assistant`,
@@ -927,11 +853,9 @@ export default function ChatPage() {
     [
       appendSystemMessage,
       copy.errorGeneric,
-      copy.imageAnalysisFallback,
       copy.newChat,
       copy.thinking,
       selectedLanguage,
-      sendImageMessage,
       sendTextMessage,
       upsertConversation,
     ],
@@ -973,7 +897,7 @@ export default function ChatPage() {
             return;
           }
 
-          await sendMessage(data.text.trim(), undefined, {
+          await sendMessage(data.text.trim(), {
             language: metadata?.language ?? selectedLanguage,
           });
         } catch (error) {
@@ -1552,7 +1476,7 @@ export default function ChatPage() {
                       variant="outline"
                       className="h-auto justify-start whitespace-normal rounded-xl border-zinc-200/80 bg-white/85 px-4 py-3 text-left text-sm shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:border-teal-200 hover:bg-teal-50 dark:border-white/10 dark:bg-white/5 dark:hover:border-teal-400/30 dark:hover:bg-teal-400/10"
                       onClick={() =>
-                        sendMessage(suggestion, undefined, {
+                        sendMessage(suggestion, {
                           language: selectedLanguage,
                         })
                       }
@@ -1567,27 +1491,6 @@ export default function ChatPage() {
             <div className="mx-auto flex w-full max-w-5xl flex-col px-2 py-6 sm:px-4">
               {messages.map((msg) => (
                 <div key={msg.id} className="flex flex-col">
-                  {msg.attachment?.type === "image" && (
-                    <div
-                      className={cn(
-                        "px-4",
-                        msg.role === "user" ? "self-end" : "self-start",
-                      )}
-                    >
-                      <div className="mb-2 max-w-[320px] overflow-hidden rounded-2xl border border-zinc-200/80 bg-white/90 p-2 shadow-sm dark:border-white/10 dark:bg-white/5">
-                        <img
-                          src={msg.attachment.url}
-                          alt={msg.attachment.name || "Uploaded image"}
-                          className="max-h-72 w-full rounded-xl object-cover"
-                        />
-                        {msg.attachment.name && (
-                          <p className="mt-2 truncate text-xs text-zinc-500">
-                            {msg.attachment.name}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  )}
                   <ChatMessage
                     message={msg}
                     onSpeak={(text) => handleSpeak(text, msg.id)}

@@ -43,8 +43,8 @@ KNOWLEDGE_BASE_DIR = PROJECT_ROOT / "knowledge_base"
 
 EMBEDDING_MODEL = "text-embedding-3-large"
 LEGACY_OPENAI_AGENT_MODEL = os.getenv("OPENAI_CHAT_MODEL", "gpt-4o-mini")
-OPENROUTER_PRIMARY_MODEL = os.getenv(
-    "OPENROUTER_PRIMARY_MODEL", "google/gemma-4-31b-it:free"
+OPENROUTER_PRIMARY_MODEL = os.getenv("OPENROUTER_PRIMARY_MODEL") or os.getenv(
+    "OPENROUTER_MODEL", "google/gemma-4-31b-it:free"
 )
 OPENROUTER_FALLBACK_MODEL = os.getenv(
     "OPENROUTER_FALLBACK_MODEL", "google/gemini-2.5-flash"
