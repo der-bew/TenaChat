@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase";
+import { HeartPulse, Loader2 } from "lucide-react";
 
 type SupportedLanguage = "en" | "am" | "om" | "ti";
 
@@ -170,10 +171,13 @@ export function AuthModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[400px]">
-        <DialogHeader>
-          <DialogTitle>{copy.title}</DialogTitle>
-          <DialogDescription>{copy.description}</DialogDescription>
+      <DialogContent className="border-white/80 bg-white/95 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-zinc-950/95 sm:max-w-[420px] sm:rounded-2xl">
+        <DialogHeader className="items-center text-center">
+          <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-700 text-white shadow-lg shadow-teal-700/20 dark:bg-teal-400 dark:text-zinc-950">
+            <HeartPulse className="h-6 w-6" />
+          </div>
+          <DialogTitle className="text-xl">{copy.title}</DialogTitle>
+          <DialogDescription className="max-w-sm">{copy.description}</DialogDescription>
         </DialogHeader>
 
         <Tabs
@@ -181,7 +185,7 @@ export function AuthModal({
           onValueChange={(value) => setActiveTab(value as "login" | "signup")}
           className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-2 rounded-xl bg-zinc-100 p-1 dark:bg-white/10">
             <TabsTrigger value="login">{copy.loginTab}</TabsTrigger>
             <TabsTrigger value="signup">{copy.signupTab}</TabsTrigger>
           </TabsList>
@@ -202,6 +206,7 @@ export function AuthModal({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={copy.emailPlaceholder}
+                  className="rounded-xl"
                   required
                 />
               </div>
@@ -213,11 +218,17 @@ export function AuthModal({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder={copy.passwordPlaceholder}
+                  className="rounded-xl"
                   required
                 />
               </div>
               {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full rounded-xl bg-teal-700 hover:bg-teal-800 dark:bg-teal-400 dark:text-zinc-950 dark:hover:bg-teal-300"
+                disabled={isLoading}
+              >
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {submitLabel}
               </Button>
             </form>
@@ -239,6 +250,7 @@ export function AuthModal({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={copy.emailPlaceholder}
+                  className="rounded-xl"
                   required
                 />
               </div>
@@ -250,11 +262,17 @@ export function AuthModal({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder={copy.passwordPlaceholder}
+                  className="rounded-xl"
                   required
                 />
               </div>
               {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full rounded-xl bg-teal-700 hover:bg-teal-800 dark:bg-teal-400 dark:text-zinc-950 dark:hover:bg-teal-300"
+                disabled={isLoading}
+              >
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {submitLabel}
               </Button>
             </form>

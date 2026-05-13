@@ -12,7 +12,7 @@ import { ChatInput } from "@/components/chat/ChatInput";
 import { ChatMessage } from "@/components/chat/ChatMessage";
 import { AuthModal } from "@/components/chat/AuthModal";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { HeartPulse, Menu, ShieldCheck, Sparkles, X } from "lucide-react";
 import {
   clearAnonymousHistoryFromStorage,
   getSupabaseClient,
@@ -378,7 +378,7 @@ export default function ChatPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [anonymousId, setAnonymousId] = useState<string | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [speakingMessageId, setSpeakingMessageId] = useState<string | null>(
     null,
@@ -1251,11 +1251,11 @@ export default function ChatPage() {
   }, [activeConversationId, conversations, isLoggedIn, loadConversationDetail]);
 
   return (
-    <div className="flex h-screen bg-white dark:bg-zinc-950">
+    <div className="flex h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,#ecfeff_0,#f8fafc_32%,#ffffff_64%)] text-zinc-950 dark:bg-[radial-gradient(circle_at_top_left,#0f172a_0,#09090b_48%,#020617_100%)] dark:text-zinc-50">
       <Button
         variant="ghost"
         size="icon"
-        className="fixed left-4 top-4 z-50 lg:hidden"
+        className="fixed left-4 top-4 z-50 border border-white/70 bg-white/90 shadow-sm backdrop-blur lg:hidden dark:border-white/10 dark:bg-zinc-950/80"
         onClick={() => setSidebarOpen(!sidebarOpen)}
       >
         {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -1268,7 +1268,7 @@ export default function ChatPage() {
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex h-full flex-col border-r border-zinc-200 dark:border-zinc-800">
+        <div className="flex h-full flex-col border-r border-white/70 bg-white/80 shadow-[8px_0_40px_rgba(15,23,42,0.06)] backdrop-blur-xl dark:border-white/10 dark:bg-zinc-950/70">
           <div className="min-h-0 flex-1">
             <ChatSidebar
               conversations={conversations}
@@ -1304,7 +1304,7 @@ export default function ChatPage() {
           </div>
 
           {isLoggedIn && (
-            <div className="border-t border-zinc-200 p-3 dark:border-zinc-800">
+            <div className="border-t border-zinc-200/70 p-3 dark:border-white/10">
               {hasMoreConversations ? (
                 <Button
                   variant="outline"
@@ -1334,44 +1334,72 @@ export default function ChatPage() {
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
-          <div className="flex items-center gap-2">
-            <h1 className="font-semibold text-zinc-900 dark:text-zinc-50">
-              {activeConversationId
-                ? conversations.find((c) => c.id === activeConversationId)
-                    ?.title || copy.pageTitle
-                : copy.pageTitle}
-            </h1>
-          </div>
+        <header className="border-b border-white/70 bg-white/75 px-4 py-3 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-zinc-950/60">
+          <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3">
+            <div className="min-w-0 pl-12 lg:pl-0">
+              <div className="flex items-center gap-2 text-xs font-medium text-teal-700 dark:text-teal-300">
+                <HeartPulse className="h-4 w-4" />
+                <span>TenaChat Health Assistant</span>
+              </div>
+              <h1 className="truncate text-base font-semibold text-zinc-950 dark:text-zinc-50 sm:text-lg">
+                {activeConversationId
+                  ? conversations.find((c) => c.id === activeConversationId)
+                      ?.title || copy.pageTitle
+                  : copy.pageTitle}
+              </h1>
+            </div>
 
-          {!isLoggedIn && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowAuthModal(true)}
-            >
-              {copy.signInToSave}
-            </Button>
-          )}
+            <nav className="hidden items-center gap-1 rounded-full border border-zinc-200/80 bg-white/80 p-1 text-sm shadow-sm dark:border-white/10 dark:bg-white/5 md:flex">
+              <button className="rounded-full bg-zinc-950 px-3 py-1.5 text-white dark:bg-white dark:text-zinc-950">
+                Chat
+              </button>
+              <button className="rounded-full px-3 py-1.5 text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-white">
+                History
+              </button>
+              <button className="rounded-full px-3 py-1.5 text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-white">
+                Languages
+              </button>
+            </nav>
+
+            {!isLoggedIn && (
+              <Button
+                variant="default"
+                size="sm"
+                className="shrink-0 bg-teal-700 shadow-sm hover:bg-teal-800 dark:bg-teal-400 dark:text-zinc-950 dark:hover:bg-teal-300"
+                onClick={() => setShowAuthModal(true)}
+              >
+                {copy.signInToSave}
+              </Button>
+            )}
+
+            {isLoggedIn && (
+              <div className="hidden items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-300 sm:flex">
+                <ShieldCheck className="h-4 w-4" />
+                Saved
+              </div>
+            )}
+          </div>
         </header>
 
         <div className="flex-1 overflow-y-auto">
           {messages.length === 0 ? (
-            <div className="flex h-full items-center justify-center">
-              <div className="max-w-md p-8 text-center">
-                <h2 className="mb-4 text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+            <div className="flex min-h-full items-center justify-center px-4 py-10">
+              <div className="w-full max-w-3xl text-center">
+                <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-700 text-white shadow-lg shadow-teal-700/20 dark:bg-teal-400 dark:text-zinc-950">
+                  <Sparkles className="h-7 w-7" />
+                </div>
+                <h2 className="mb-3 text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-4xl">
                   {copy.welcomeTitle}
                 </h2>
-                <p className="mb-6 text-zinc-600 dark:text-zinc-400">
+                <p className="mx-auto mb-8 max-w-2xl text-base leading-7 text-zinc-600 dark:text-zinc-300">
                   {copy.welcomeDescription}
                 </p>
-                <div className="flex flex-wrap justify-center gap-2">
+                <div className="mx-auto grid max-w-2xl gap-2 sm:grid-cols-2">
                   {copy.suggestions.map((suggestion, index) => (
                     <Button
                       key={index}
                       variant="outline"
-                      size="sm"
-                      className="text-xs"
+                      className="h-auto justify-start whitespace-normal rounded-xl border-zinc-200/80 bg-white/85 px-4 py-3 text-left text-sm shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:border-teal-200 hover:bg-teal-50 dark:border-white/10 dark:bg-white/5 dark:hover:border-teal-400/30 dark:hover:bg-teal-400/10"
                       onClick={() =>
                         sendMessage(suggestion, undefined, {
                           language: selectedLanguage,
@@ -1385,7 +1413,7 @@ export default function ChatPage() {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col">
+            <div className="mx-auto flex w-full max-w-5xl flex-col px-2 py-6 sm:px-4">
               {messages.map((msg) => (
                 <div key={msg.id} className="flex flex-col">
                   {msg.attachment?.type === "image" && (
@@ -1395,7 +1423,7 @@ export default function ChatPage() {
                         msg.role === "user" ? "self-end" : "self-start",
                       )}
                     >
-                      <div className="mb-2 max-w-[320px] overflow-hidden rounded-2xl border border-zinc-200 bg-white p-2 dark:border-zinc-800 dark:bg-zinc-900">
+                      <div className="mb-2 max-w-[320px] overflow-hidden rounded-2xl border border-zinc-200/80 bg-white/90 p-2 shadow-sm dark:border-white/10 dark:bg-white/5">
                         <img
                           src={msg.attachment.url}
                           alt={msg.attachment.name || "Uploaded image"}
@@ -1421,14 +1449,16 @@ export default function ChatPage() {
           )}
         </div>
 
-        <div className="border-t border-zinc-200 p-4 dark:border-zinc-800">
-          <ChatInput
-            onSendMessage={sendMessage}
-            onSendVoice={sendVoice}
-            disabled={isLoading}
-            isLoading={isLoading}
-            selectedLanguage={selectedLanguage}
-          />
+        <div className="border-t border-white/70 bg-white/75 p-3 backdrop-blur-xl dark:border-white/10 dark:bg-zinc-950/60 sm:p-4">
+          <div className="mx-auto w-full max-w-4xl">
+            <ChatInput
+              onSendMessage={sendMessage}
+              onSendVoice={sendVoice}
+              disabled={isLoading}
+              isLoading={isLoading}
+              selectedLanguage={selectedLanguage}
+            />
+          </div>
         </div>
       </div>
 

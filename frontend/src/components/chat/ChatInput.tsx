@@ -246,13 +246,13 @@ export function ChatInput({
   };
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200/80 bg-white/90 p-2 shadow-[0_18px_50px_rgba(15,23,42,0.10)] backdrop-blur-xl dark:border-white/10 dark:bg-white/5">
       {imagePreview && (
-        <div className="relative w-fit">
+        <div className="relative w-fit px-1 pt-1">
           <img
             src={imagePreview}
             alt={labels.newImageAlt}
-            className="max-h-32 rounded-lg border border-zinc-200 object-cover dark:border-zinc-700"
+            className="max-h-32 rounded-xl border border-zinc-200 object-cover dark:border-white/10"
           />
           {imageName && (
             <div className="mt-1 max-w-40 truncate text-xs text-zinc-500">
@@ -273,7 +273,7 @@ export function ChatInput({
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="flex gap-2">
+      <form onSubmit={handleSubmit} className="flex items-end gap-2">
         <input
           type="file"
           ref={fileInputRef}
@@ -284,12 +284,13 @@ export function ChatInput({
 
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
           size="icon"
           onClick={() => fileInputRef.current?.click()}
           disabled={disabled || isLoading}
           aria-label={labels.imageButton}
           title={labels.imageButton}
+          className="h-11 w-11 shrink-0 rounded-xl text-zinc-500 hover:bg-teal-50 hover:text-teal-700 dark:text-zinc-300 dark:hover:bg-teal-400/10 dark:hover:text-teal-200"
         >
           <Image className="h-5 w-5" />
         </Button>
@@ -305,7 +306,7 @@ export function ChatInput({
                 ? `${labels.recording} ${formatTime(recordingTime)}`
                 : labels.placeholder
             }
-            className="resize-none pr-24"
+            className="min-h-11 resize-none rounded-xl border-0 bg-zinc-50/80 py-3 pr-14 shadow-none focus-visible:ring-1 focus-visible:ring-teal-600 focus-visible:ring-offset-0 dark:bg-zinc-950/60 dark:focus-visible:ring-teal-300"
             disabled={disabled || isRecording}
             rows={1}
           />
@@ -321,7 +322,7 @@ export function ChatInput({
               onTouchStart={startRecording}
               onTouchEnd={stopRecording}
               disabled={disabled || isLoading}
-              className={`h-8 w-8 ${isRecording ? "animate-pulse text-red-500" : ""}`}
+              className={`h-8 w-8 rounded-lg ${isRecording ? "animate-pulse text-red-500" : "text-zinc-500 hover:text-teal-700 dark:text-zinc-300 dark:hover:text-teal-200"}`}
               aria-label={labels.voiceButton}
               title={labels.voiceButton}
             >
@@ -339,7 +340,7 @@ export function ChatInput({
           disabled={
             disabled || (!message.trim() && !imagePreview) || isRecording
           }
-          className="shrink-0"
+          className="h-11 w-11 shrink-0 rounded-xl bg-teal-700 p-0 shadow-sm hover:bg-teal-800 dark:bg-teal-400 dark:text-zinc-950 dark:hover:bg-teal-300"
           aria-label={labels.send}
           title={labels.send}
         >

@@ -12,6 +12,7 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  HeartPulse,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -173,12 +174,22 @@ export function ChatSidebar({
   };
 
   return (
-    <div className="flex h-full flex-col bg-zinc-50 dark:bg-zinc-900">
+    <div className="flex h-full flex-col bg-transparent">
       <div className="flex items-center justify-between p-3">
         {!isCollapsed && (
-          <h2 className="font-semibold text-zinc-900 dark:text-zinc-50">
-            {copy.appTitle}
-          </h2>
+          <div className="flex min-w-0 items-center gap-2">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-teal-700 text-white shadow-sm dark:bg-teal-400 dark:text-zinc-950">
+              <HeartPulse className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <h2 className="truncate text-sm font-semibold text-zinc-950 dark:text-zinc-50">
+                {copy.appTitle}
+              </h2>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                Maternal health AI
+              </p>
+            </div>
+          </div>
         )}
 
         <div
@@ -191,7 +202,7 @@ export function ChatSidebar({
             variant="ghost"
             size="icon"
             onClick={toggleCollapsed}
-            className="h-8 w-8"
+            className="h-8 w-8 rounded-lg"
             aria-label={
               isCollapsed
                 ? (copy.expandSidebar ?? "Expand sidebar")
@@ -215,7 +226,7 @@ export function ChatSidebar({
               variant="ghost"
               size="icon"
               onClick={onLogout}
-              className="h-8 w-8"
+              className="h-8 w-8 rounded-lg"
               aria-label={copy.logout}
               title={copy.logout}
             >
@@ -229,7 +240,7 @@ export function ChatSidebar({
         <Button
           variant="outline"
           className={cn(
-            "w-full gap-2",
+            "h-10 w-full gap-2 rounded-xl border-zinc-200/80 bg-white/80 shadow-sm hover:border-teal-200 hover:bg-teal-50 dark:border-white/10 dark:bg-white/5 dark:hover:border-teal-400/30 dark:hover:bg-teal-400/10",
             isCollapsed ? "justify-center px-2" : "justify-start",
           )}
           onClick={onNewChat}
@@ -245,7 +256,7 @@ export function ChatSidebar({
         {conversations.length === 0 ? (
           <div
             className={cn(
-              "px-3 py-8 text-center text-sm text-zinc-500",
+              "rounded-xl border border-dashed border-zinc-200/80 bg-white/50 px-3 py-8 text-center text-sm text-zinc-500 dark:border-white/10 dark:bg-white/5",
               isCollapsed && "px-1 text-xs",
             )}
             title={copy.noConversations}
@@ -261,12 +272,12 @@ export function ChatSidebar({
                 <div
                   key={conv.id}
                   className={cn(
-                    "group flex items-center gap-2 rounded-lg px-2.5 py-2 transition-colors",
+                    "group flex items-center gap-2 rounded-xl px-2.5 py-2.5 text-zinc-700 transition-all dark:text-zinc-200",
                     isEditing
-                      ? "bg-zinc-100 dark:bg-zinc-800/70"
+                      ? "bg-white shadow-sm dark:bg-white/10"
                       : activeConversationId === conv.id
-                        ? "cursor-pointer bg-zinc-200 dark:bg-zinc-800"
-                        : "cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800/50",
+                        ? "cursor-pointer bg-teal-50 text-teal-900 shadow-sm ring-1 ring-teal-100 dark:bg-teal-400/10 dark:text-teal-100 dark:ring-teal-400/20"
+                        : "cursor-pointer hover:bg-white/80 hover:shadow-sm dark:hover:bg-white/10",
                     isCollapsed && "justify-center px-2",
                   )}
                   onClick={() => {
@@ -274,7 +285,7 @@ export function ChatSidebar({
                   }}
                   title={conv.title}
                 >
-                  <MessageSquare className="h-4 w-4 shrink-0 text-zinc-500" />
+                  <MessageSquare className="h-4 w-4 shrink-0 text-teal-700 dark:text-teal-300" />
 
                   {!isCollapsed &&
                     (isEditing ? (
@@ -293,7 +304,7 @@ export function ChatSidebar({
                               cancelRename();
                             }
                           }}
-                          className="flex-1 rounded-md border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none ring-0 focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+                          className="flex-1 rounded-lg border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 outline-none ring-0 focus:border-teal-500 dark:border-white/10 dark:bg-zinc-950 dark:text-zinc-100"
                           autoFocus
                           disabled={isSavingRename}
                           maxLength={255}
@@ -371,7 +382,7 @@ export function ChatSidebar({
         )}
       </div>
 
-      <div className="border-t border-zinc-200 p-3 dark:border-zinc-800">
+      <div className="border-t border-zinc-200/70 p-3 dark:border-white/10">
         <div className={cn("mb-3", isCollapsed && "mb-2")}>
           {!isCollapsed && (
             <label
@@ -388,7 +399,7 @@ export function ChatSidebar({
               handleLanguageChange(e.target.value as SupportedLanguage)
             }
             className={cn(
-              "w-full rounded-md border border-zinc-300 bg-white py-1.5 text-sm text-zinc-900 outline-none ring-0 transition focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100",
+              "w-full rounded-xl border border-zinc-200/80 bg-white/80 py-2 text-sm text-zinc-900 outline-none ring-0 transition focus:border-teal-500 dark:border-white/10 dark:bg-white/5 dark:text-zinc-100",
               isCollapsed ? "px-1 text-center" : "px-3",
             )}
             aria-label={copy.languageLabel ?? "Language"}

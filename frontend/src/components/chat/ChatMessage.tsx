@@ -38,9 +38,9 @@ export function ChatMessage({
       )}
     >
       {!isUser && (
-        <Avatar className="h-8 w-8 shrink-0">
+        <Avatar className="h-9 w-9 shrink-0 shadow-sm">
           <AvatarImage src="" alt="AI" />
-          <AvatarFallback className="bg-zinc-200 dark:bg-zinc-800">
+          <AvatarFallback className="bg-teal-100 text-teal-800 dark:bg-teal-400/15 dark:text-teal-200">
             <Bot className="h-4 w-4" />
           </AvatarFallback>
         </Avatar>
@@ -48,18 +48,18 @@ export function ChatMessage({
 
       <div
         className={cn(
-          "flex max-w-[80%] flex-col gap-1",
+          "flex max-w-[86%] flex-col gap-1 sm:max-w-[78%]",
           isUser ? "items-end" : "items-start",
         )}
       >
         <div
           className={cn(
-            "rounded-2xl px-4 py-2.5 text-sm",
+            "rounded-2xl px-4 py-3 text-sm leading-6 shadow-sm",
             isUser
-              ? "bg-zinc-900 text-zinc-50 dark:bg-zinc-50 dark:text-zinc-900"
+              ? "bg-teal-700 text-zinc-50 shadow-teal-700/10 dark:bg-teal-400 dark:text-zinc-950"
               : isSystem
-                ? "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
-                : "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50",
+                ? "border border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-400/20 dark:bg-amber-400/10 dark:text-amber-100"
+                : "border border-zinc-200/80 bg-white/90 text-zinc-900 dark:border-white/10 dark:bg-white/5 dark:text-zinc-50",
           )}
         >
           <div className="prose prose-sm max-w-none break-words dark:prose-invert prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-1 prose-strong:text-inherit prose-headings:text-inherit prose-a:text-inherit">
@@ -105,7 +105,7 @@ export function ChatMessage({
               onClick={() => onSpeak(message.content)}
             >
               <Volume2
-                className={cn("h-4 w-4", isSpeaking ? "text-blue-500" : "")}
+                className={cn("h-4 w-4", isSpeaking ? "text-teal-600 dark:text-teal-300" : "")}
               />
             </Button>
           )}
@@ -120,9 +120,9 @@ export function ChatMessage({
                 <span
                   key={i}
                   title={s.source}
-                  className="inline-flex items-center rounded bg-zinc-100 px-1.5 py-0.5 text-[0.7rem] text-zinc-500 dark:bg-zinc-700 dark:text-zinc-400"
+                  className="inline-flex items-center rounded-full border border-zinc-200 bg-white px-2 py-0.5 text-[0.7rem] text-zinc-500 shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-zinc-400"
                 >
-                  📄 {truncated}
+                  {truncated}
                   {nameWithoutExt.length > 40 ? "…" : ""}
                 </span>
               );
@@ -132,9 +132,9 @@ export function ChatMessage({
       </div>
 
       {isUser && (
-        <Avatar className="h-8 w-8 shrink-0">
+        <Avatar className="h-9 w-9 shrink-0 shadow-sm">
           <AvatarImage src="" alt="You" />
-          <AvatarFallback className="bg-blue-600 text-white">
+          <AvatarFallback className="bg-zinc-950 text-white dark:bg-white dark:text-zinc-950">
             <User className="h-4 w-4" />
           </AvatarFallback>
         </Avatar>
