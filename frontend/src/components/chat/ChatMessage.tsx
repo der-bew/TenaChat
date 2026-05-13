@@ -14,6 +14,7 @@ interface Message {
   content: string;
   timestamp?: Date;
   sources?: Array<{ source: string; file_type?: string }>;
+  isPending?: boolean;
 }
 
 interface ChatMessageProps {
@@ -59,32 +60,45 @@ export function ChatMessage({
               ? "bg-teal-700 text-zinc-50 shadow-teal-700/10 dark:bg-teal-400 dark:text-zinc-950"
               : isSystem
                 ? "border border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-400/20 dark:bg-amber-400/10 dark:text-amber-100"
-                : "border border-zinc-200/80 bg-white/90 text-zinc-900 dark:border-white/10 dark:bg-white/5 dark:text-zinc-50",
+                : message.isPending
+                  ? "border border-teal-200 bg-teal-50 text-teal-900 dark:border-teal-400/20 dark:bg-teal-400/10 dark:text-teal-100"
+                  : "border border-zinc-200/80 bg-white/90 text-zinc-900 dark:border-white/10 dark:bg-white/5 dark:text-zinc-50",
           )}
         >
-          <div className="prose prose-sm max-w-none break-words dark:prose-invert prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-1 prose-strong:text-inherit prose-headings:text-inherit prose-a:text-inherit">
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                p: ({ children }) => (
-                  <p className="whitespace-pre-wrap">{children}</p>
-                ),
-                code: ({ children, className, ...props }) => (
-                  <code
-                    className={
-                      className ??
-                      "rounded bg-black/10 px-1 py-0.5 text-[0.85em] dark:bg-white/10"
-                    }
-                    {...props}
-                  >
-                    {children}
-                  </code>
-                ),
-              }}
-            >
-              {message.content}
-            </ReactMarkdown>
-          </div>
+          {message.isPending ? (
+            <div className="flex items-center gap-2">
+              <span>{message.content}</span>
+              <span className="flex gap-1" aria-hidden="true">
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.2s]" />
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.1s]" />
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current" />
+              </span>
+            </div>
+          ) : (
+            <div className="prose prose-sm max-w-none break-words dark:prose-invert prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-1 prose-strong:text-inherit prose-headings:text-inherit prose-a:text-inherit">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  p: ({ children }) => (
+                    <p className="whitespace-pre-wrap">{children}</p>
+                  ),
+                  code: ({ children, className, ...props }) => (
+                    <code
+                      className={
+                        className ??
+                        "rounded bg-black/10 px-1 py-0.5 text-[0.85em] dark:bg-white/10"
+                      }
+                      {...props}
+                    >
+                      {children}
+                    </code>
+                  ),
+                }}
+              >
+                {message.content}
+              </ReactMarkdown>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-2 text-xs text-zinc-500">
@@ -97,7 +111,7 @@ export function ChatMessage({
             </span>
           )}
 
-          {!isUser && !isSystem && onSpeak && (
+          {!isUser && !isSystem && !message.isPending && onSpeak && (
             <Button
               variant="ghost"
               size="icon"

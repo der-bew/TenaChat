@@ -21,7 +21,7 @@ from app.utils.cache import (
     set_cached_response,
 )
 from app.utils.validation import sanitize_input, validate_uuid
-from fastapi import APIRouter, Depends, Header, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends, Header, HTTPException, status
 from langchain_core.messages import HumanMessage
 from openai import OpenAI
 from pydantic import BaseModel, Field, validator
@@ -225,6 +225,34 @@ def _save_chat_messages(
     ).execute()
 
 
+async def _persist_chat_messages_after_response(
+    convo_id: str,
+    user_id: str,
+    is_anonymous: bool,
+    token: Optional[str],
+    user_message: str,
+    assistant_message: str,
+) -> None:
+    try:
+        if is_anonymous:
+            await save_anonymous_session(
+                user_id, convo_id, user_message, assistant_message
+            )
+            return
+
+        db_client = get_supabase_client(token) if token else supabase
+        _save_chat_messages(
+            db_client=db_client,
+            convo_id=convo_id,
+            user_id=user_id,
+            is_anonymous=False,
+            user_message=user_message,
+            assistant_message=assistant_message,
+        )
+    except Exception as e:
+        logger.error("Error saving messages after response: %s", e, exc_info=True)
+
+
 def _build_tts_url(text: str, language: str = "en") -> str:
     return f"/api/chat/tts?text={text[:500]}&language={language}"
 
@@ -232,6 +260,7 @@ def _build_tts_url(text: str, language: str = "en") -> str:
 @router.post("/chat", response_model=ChatResponse, status_code=status.HTTP_200_OK)
 async def chat_endpoint(
     request: ChatRequest,
+    background_tasks: BackgroundTasks,
     x_anonymous_id: Optional[str] = Header(None, description="Anonymous session ID"),
     x_request_id: Optional[str] = Header(None, description="Client-supplied correlation ID"),
     user_id: Optional[str] = Depends(get_current_user_or_anonymous),
@@ -303,6 +332,8 @@ async def chat_endpoint(
                 "language": request.language,
                 "requested_language": request.language,
                 "auth_token": token,
+                "has_existing_conversation": bool(request.conversation_id),
+                "is_anonymous": is_anonymous,
             }
 
             result = agent_graph.invoke(
@@ -338,22 +369,15 @@ async def chat_endpoint(
 
         set_cached_response(cache_key, response)
 
-        try:
-            if is_anonymous:
-                await save_anonymous_session(
-                    resolved_user_id, convo_id, request.message, response
-                )
-            else:
-                _save_chat_messages(
-                    db_client=db_client,
-                    convo_id=convo_id,
-                    user_id=resolved_user_id,
-                    is_anonymous=is_anonymous,
-                    user_message=request.message,
-                    assistant_message=response,
-                )
-        except Exception as e:
-            log.error("Error saving messages: %s", e, exc_info=True)
+        background_tasks.add_task(
+            _persist_chat_messages_after_response,
+            convo_id,
+            resolved_user_id,
+            is_anonymous,
+            token,
+            request.message,
+            response,
+        )
 
         return ChatResponse(
             response=response,

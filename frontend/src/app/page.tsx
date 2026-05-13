@@ -39,6 +39,7 @@ interface Message {
   timestamp?: Date;
   attachment?: MessageAttachment;
   sources?: Array<{ source: string; file_type?: string }>;
+  isPending?: boolean;
 }
 
 interface Conversation {
@@ -129,6 +130,7 @@ interface UiCopy {
   loadingMore: string;
   noMoreConversations: string;
   errorGeneric: string;
+  thinking: string;
   errorAudioRead: string;
   errorNoSpeech: string;
   errorAudioProcess: string;
@@ -172,6 +174,7 @@ const UI_COPY: Record<SupportedLanguage, UiCopy> = {
     loadingMore: "Loading more...",
     noMoreConversations: "No more conversations",
     errorGeneric: "Sorry, something went wrong. Please try again.",
+    thinking: "Thinking...",
     errorAudioRead: "Could not read the recorded audio. Please try again.",
     errorNoSpeech: "No speech was detected. Please try speaking again.",
     errorAudioProcess:
@@ -216,6 +219,7 @@ const UI_COPY: Record<SupportedLanguage, UiCopy> = {
     loadingMore: "በመጫን ላይ...",
     noMoreConversations: "ተጨማሪ ውይይቶች የሉም",
     errorGeneric: "ይቅርታ፣ ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።",
+    thinking: "በማሰብ ላይ...",
     errorAudioRead: "የተቀዳውን ድምፅ ማንበብ አልተቻለም። እባክዎ እንደገና ይሞክሩ።",
     errorNoSpeech: "ምንም ድምፅ አልተገኘም። እባክዎ እንደገና ይናገሩ።",
     errorAudioProcess: "ይቅርታ፣ ድምፁን ማስኬድ አልተቻለም። እባክዎ እንደገና ይሞክሩ።",
@@ -258,6 +262,7 @@ const UI_COPY: Record<SupportedLanguage, UiCopy> = {
     loadingMore: "Fe'aa jira...",
     noMoreConversations: "Marii dabalataa hin jiru",
     errorGeneric: "Rakkoon uumameera. Mee irra deebi'ii yaali.",
+    thinking: "Yaadaa jira...",
     errorAudioRead:
       "Sagalee waraabame dubbisuu hin dandeenye. Mee irra deebi'ii yaali.",
     errorNoSpeech: "Sagaleen hin argamne. Mee irra deebi'ii dubbadhu.",
@@ -304,6 +309,7 @@ const UI_COPY: Record<SupportedLanguage, UiCopy> = {
     loadingMore: "ብምጽዓን ላይ...",
     noMoreConversations: "ተወሳኺ ዝርርባት የለን",
     errorGeneric: "ይቕረታ፣ ጌጋ ተፈጢሩ። እንደገና ፈትኑ።",
+    thinking: "ይሓስብ ኣሎ...",
     errorAudioRead: "ዝተቐድሐ ድምጺ ከንብብ ኣይተኻእለን። እንደገና ፈትኑ።",
     errorNoSpeech: "ድምጺ ኣይተረኽበን። እንደገና ተዛረቡ።",
     errorAudioProcess: "ይቕረታ፣ እቲ ድምጺ ክሰርሕ ኣይተኻእለን። እንደገና ፈትኑ።",
@@ -334,6 +340,27 @@ function stripMarkdownForSpeech(text: string) {
     .replace(/[`*_>#-]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+async function getResponseErrorMessage(response: Response, fallback: string) {
+  try {
+    const contentType = response.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) {
+      const payload = await response.json();
+      const detail =
+        typeof payload?.detail === "string"
+          ? payload.detail
+          : typeof payload?.message === "string"
+            ? payload.message
+            : null;
+      return detail || fallback;
+    }
+
+    const text = await response.text();
+    return text.trim() || fallback;
+  } catch {
+    return fallback;
+  }
 }
 
 function toStoredConversations(conversations: Conversation[]) {
@@ -735,10 +762,16 @@ export default function ChatPage() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to get text response");
+        throw new Error(
+          await getResponseErrorMessage(response, "Failed to get text response"),
+        );
       }
 
-      return response.json();
+      const data = (await response.json()) as ChatApiResponse;
+      if (!data.response || typeof data.response !== "string") {
+        throw new Error("The chat service returned an empty response.");
+      }
+      return data;
     },
     [activeConversationId, getRequestHeaders],
   );
@@ -766,10 +799,16 @@ export default function ChatPage() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to analyze image");
+        throw new Error(
+          await getResponseErrorMessage(response, "Failed to analyze image"),
+        );
       }
 
-      return response.json();
+      const data = (await response.json()) as ImageApiResponse;
+      if (!data.response || typeof data.response !== "string") {
+        throw new Error("The image service returned an empty response.");
+      }
+      return data;
     },
     [
       activeConversationId,
@@ -785,9 +824,15 @@ export default function ChatPage() {
       if (!trimmedContent && !image) return;
 
       const language = metadata?.language ?? selectedLanguage;
+      const requestId =
+        typeof crypto !== "undefined" && "randomUUID" in crypto
+          ? crypto.randomUUID()
+          : `${Date.now()}_${Math.random().toString(36).slice(2)}`;
+      const userMessageId = `msg_${requestId}_user`;
+      const pendingMessageId = `msg_${requestId}_assistant_pending`;
 
       const userMessage: Message = {
-        id: `msg_${Date.now()}`,
+        id: userMessageId,
         role: "user",
         content: trimmedContent || copy.imageAnalysisFallback,
         timestamp: new Date(),
@@ -800,8 +845,15 @@ export default function ChatPage() {
             }
           : undefined,
       };
+      const pendingMessage: Message = {
+        id: pendingMessageId,
+        role: "assistant",
+        content: copy.thinking,
+        timestamp: new Date(),
+        isPending: true,
+      };
 
-      setMessages((prev) => [...prev, userMessage]);
+      setMessages((prev) => [...prev, userMessage, pendingMessage]);
       setIsLoading(true);
 
       try {
@@ -810,7 +862,7 @@ export default function ChatPage() {
           : await sendTextMessage(trimmedContent, language);
 
         const assistantMessage: Message = {
-          id: `msg_${Date.now()}_ai`,
+          id: `msg_${requestId}_assistant`,
           role: "assistant",
           content: data.response,
           timestamp: new Date(),
@@ -818,7 +870,9 @@ export default function ChatPage() {
         };
 
         setMessages((prev) => {
-          const nextMessages = [...prev, assistantMessage];
+          const nextMessages = prev.map((message) =>
+            message.id === pendingMessageId ? assistantMessage : message,
+          );
           if (data.conversation_id) {
             upsertConversation(
               data.conversation_id,
@@ -834,7 +888,22 @@ export default function ChatPage() {
         }
       } catch (error) {
         console.error("Error sending message:", error);
-        appendSystemMessage(copy.errorGeneric);
+        const message =
+          error instanceof Error && error.message
+            ? error.message
+            : copy.errorGeneric;
+        setMessages((prev) =>
+          prev.map((item) =>
+            item.id === pendingMessageId
+              ? {
+                  ...item,
+                  role: "system",
+                  content: message,
+                  isPending: false,
+                }
+              : item,
+          ),
+        );
       } finally {
         setIsLoading(false);
       }
@@ -844,6 +913,7 @@ export default function ChatPage() {
       copy.errorGeneric,
       copy.imageAnalysisFallback,
       copy.newChat,
+      copy.thinking,
       selectedLanguage,
       sendImageMessage,
       sendTextMessage,
@@ -1275,6 +1345,10 @@ export default function ChatPage() {
   }, [isLoggedIn, loadSavedConversations]);
 
   useEffect(() => {
+    if (messages.some((message) => message.isPending)) {
+      return;
+    }
+
     if (activeConversationId && isLoggedIn) {
       const conversation = conversations.find(
         (item) => item.id === activeConversationId,
@@ -1284,7 +1358,13 @@ export default function ChatPage() {
         void loadConversationDetail(activeConversationId);
       }
     }
-  }, [activeConversationId, conversations, isLoggedIn, loadConversationDetail]);
+  }, [
+    activeConversationId,
+    conversations,
+    isLoggedIn,
+    loadConversationDetail,
+    messages,
+  ]);
 
   return (
     <div className="flex h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,#ecfeff_0,#f8fafc_32%,#ffffff_64%)] text-zinc-950 dark:bg-[radial-gradient(circle_at_top_left,#0f172a_0,#09090b_48%,#020617_100%)] dark:text-zinc-50">

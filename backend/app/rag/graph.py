@@ -331,6 +331,8 @@ class AgentState(TypedDict):
     user_id: str
     conversation_id: str
     auth_token: str | None
+    has_existing_conversation: bool
+    is_anonymous: bool
     short_term_memory: str
     long_term_memory: str
     is_health_query: bool
@@ -623,9 +625,12 @@ def retrieve(state: AgentState):
     # --- Retrieval with metrics ---
     retrieval_start = time.monotonic()
     short_term_memory = _format_short_term_memory(messages[:-1])
-    long_term_memory = _load_long_term_memory(
-        state["conversation_id"], state.get("auth_token")
-    )
+    if state.get("has_existing_conversation") and not state.get("is_anonymous"):
+        long_term_memory = _load_long_term_memory(
+            state["conversation_id"], state.get("auth_token")
+        )
+    else:
+        long_term_memory = "No long-term memory available."
     vector_context, sources, has_evidence = _retrieve_with_sources(user_query)
     retrieval_latency_ms = (time.monotonic() - retrieval_start) * 1000
 
