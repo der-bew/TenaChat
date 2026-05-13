@@ -7,6 +7,7 @@ Author: Derbew Felasman
 import logging
 import re
 import time
+from pathlib import Path
 from typing import TYPE_CHECKING, Annotated, Any, List, TypedDict, cast
 
 from app.config import OPENAI_API_KEY, SERPER_API_KEY
@@ -31,11 +32,15 @@ else:
 
 logger = logging.getLogger(__name__)
 
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+KNOWLEDGE_BASE_DIR = PROJECT_ROOT / "knowledge_base"
+
 EMBEDDING_MODEL = "text-embedding-3-large"
 AGENT_MODEL = "gpt-4o-mini"
 SHORT_TERM_MEMORY_LIMIT = 8
 LONG_TERM_MEMORY_LIMIT = 10
-RETRIEVAL_TOP_K = 5  # Number of documents to retrieve per query
+RETRIEVAL_TOP_K = 3  # Number of documents to retrieve per query
+LLM_TIMEOUT_SECONDS = 25
 
 SUPPORTED_LANGUAGES = ("en", "am", "om", "ti")
 
@@ -218,7 +223,7 @@ def _load_vectorstore():
             embedding_model = cast(Embeddings, emb)
             try:
                 vectorstore = FAISS.load_local(
-                    "knowledge_base",
+                    str(KNOWLEDGE_BASE_DIR),
                     embedding_model,
                     allow_dangerous_deserialization=True,
                 )
@@ -242,7 +247,10 @@ if serper_available:
 
 llm = ChatOpenAI(
     model=AGENT_MODEL,
-    temperature=0.7,
+    temperature=0.3,
+    timeout=LLM_TIMEOUT_SECONDS,
+    max_retries=1,
+    max_tokens=220,
     api_key=SecretStr(OPENAI_API_KEY) if OPENAI_API_KEY else None,
 )
 
@@ -268,21 +276,44 @@ class AgentState(TypedDict):
 @tool(description="Search the web for up-to-date information")
 def web_search(query: str) -> str:
     """Search the web using Serper."""
-    if not serper or not serper_available:
+    web_context, _, has_evidence = _search_web_with_sources(query)
+    if not has_evidence:
         return "Web search not available."
+    return web_context
+
+
+def _search_web_with_sources(query: str) -> tuple[str, List[dict], bool]:
+    if not serper or not serper_available:
+        return "Web search not available.", [], False
     try:
         results = serper.results(query)
         organic_results = results.get("organic", [])
-        formatted = "\n".join(
-            [
-                f"Title: {item.get('title', 'N/A')}\nSnippet: {item.get('snippet', 'N/A')}\nURL: {item.get('link', 'N/A')}"
-                for item in organic_results[:5]
-            ]
-        )
-        return formatted if formatted else "No relevant web results found."
+        if not organic_results:
+            return "No relevant web results found.", [], False
+
+        sources: List[dict] = []
+        formatted_results: List[str] = []
+
+        for item in organic_results[:5]:
+            title = item.get("title", "N/A")
+            snippet = item.get("snippet", "N/A")
+            link = item.get("link", "N/A")
+            formatted_results.append(
+                f"Title: {title}\nSnippet: {snippet}\nURL: {link}"
+            )
+            if link and link != "N/A":
+                sources.append(
+                    {
+                        "source": link,
+                        "file_type": "web",
+                        "title": title,
+                    }
+                )
+
+        return "\n".join(formatted_results), sources, True
     except Exception as e:
-        logger.error(f"Web search error: {e}")
-        return "Error during web search."
+        logger.warning("Web search unavailable for query: %s", e)
+        return "Web search not available.", [], False
 
 
 def _format_short_term_memory(messages: List[BaseMessage]) -> str:
@@ -372,42 +403,37 @@ def _looks_like_health_query(query: str) -> bool:
 
 def _is_health_related_query(query: str, detected_language: str) -> bool:
     """
-    Multilingual health guard.
-    1) fast keyword check across supported languages
-    2) fallback intent classification via LLM (allows non-keyword phrasing)
+    Fast multilingual health guard.
+
+    This intentionally avoids an additional LLM classification call, which adds
+    a full model round-trip to every request and significantly increases latency.
     """
     if _looks_like_health_query(query):
         return True
 
-    try:
-        classifier_prompt = (
-            "You are a strict intent classifier.\n"
-            "Task: Decide whether the user query is health/medical-related.\n"
-            "The user may write in English, Amharic, Afaan Oromo, or Tigrinya.\n"
-            "Return exactly one token: YES or NO.\n"
-            "Mark YES for questions about symptoms, disease, pregnancy, maternal care, "
-            "reproductive health, cancer, treatment, prevention, clinics/hospitals, tests, medicines.\n"
-            "Mark NO for unrelated topics like coding, politics, finance, sports, entertainment."
-        )
-        result = llm.invoke(
-            [
-                SystemMessage(content=classifier_prompt),
-                HumanMessage(
-                    content=f"Language hint: {detected_language}\nUser query: {query}"
-                ),
-            ]
-        )
-        text = (
-            result.content.strip().upper()
-            if isinstance(result.content, str)
-            else str(result.content).strip().upper()
-        )
-        return text.startswith("YES")
-    except Exception as e:
-        logger.warning(
-            f"Health intent classification failed, using keyword fallback only: {e}"
-        )
+    short_query = (query or "").strip().lower()
+    if not short_query:
         return False
+
+    # Supported-language queries in this app are overwhelmingly health-related.
+    # Treat short question patterns as in-domain unless they clearly look like
+    # generic chit-chat or unrelated requests.
+    non_health_starters = (
+        "hello",
+        "hi",
+        "hey",
+        "thanks",
+        "thank you",
+        "who are you",
+        "what can you do",
+    )
+    if any(short_query.startswith(starter) for starter in non_health_starters):
+        return False
+
+    if detected_language in SUPPORTED_LANGUAGES and len(short_query) >= 8:
+        return True
+
+    return False
 
 
 def _refusal_message_for_language(language: str) -> str:
@@ -537,9 +563,6 @@ def retrieve(state: AgentState):
         retrieval_latency_ms,
     )
 
-    state["has_evidence"] = has_evidence
-    state["sources"] = sources
-
     needs_web_search = any(
         keyword in user_query.lower()
         for keyword in [
@@ -558,9 +581,34 @@ def retrieve(state: AgentState):
             "ሓድሽ",
         ]
     )
-    web_results = (
-        web_search.invoke(user_query) if needs_web_search else "Web search not needed."
-    )
+
+    web_results = "Web search not needed."
+    web_sources: List[dict] = []
+    web_has_evidence = False
+    if needs_web_search:
+        web_start = time.monotonic()
+        web_results, web_sources, web_has_evidence = _search_web_with_sources(
+            user_query
+        )
+        logger.info(
+            "Web search metrics — conversation: %s | used: %s | sources: %d | has_evidence: %s | latency_ms: %.1f",
+            state.get("conversation_id", "unknown"),
+            needs_web_search,
+            len(web_sources),
+            web_has_evidence,
+            (time.monotonic() - web_start) * 1000,
+        )
+
+    combined_sources: List[dict] = list(sources)
+    seen_sources = {source.get("source", "") for source in combined_sources}
+    for source in web_sources:
+        source_name = source.get("source", "")
+        if source_name and source_name not in seen_sources:
+            seen_sources.add(source_name)
+            combined_sources.append(source)
+
+    state["has_evidence"] = has_evidence or (needs_web_search and web_has_evidence)
+    state["sources"] = combined_sources
 
     state["short_term_memory"] = short_term_memory
     state["long_term_memory"] = long_term_memory
@@ -597,33 +645,14 @@ def generate(state: AgentState):
         return {"messages": [AIMessage(content=fallback)]}
 
     system_prompt = (
-        "You are a helpful, empathetic health chatbot for Ethiopian women. "
-        "You must only answer health-related questions. "
-        "If a user asks about non-health topics, refuse briefly and redirect them to ask a health question. "
-        "Provide accurate, culturally relevant info on maternal health, obstetric fistula, and cancers. "
-        "Use simple language, acknowledge emotions, and suggest local resources when appropriate. "
-        "Use the provided short-term memory, long-term memory, knowledge retrieval, and web search context. "
-        "Prefer the knowledge base for domain facts, and use web search only for current or time-sensitive information. "
-        "Keep responses concise, supportive, and actionable. "
-        "Language policy: detect the user's language and respond in the same language whenever possible. "
-        "Supported languages: English, Amharic, Afaan Oromo, Tigrinya. "
-        "If the user language is one of these, answer in that language. "
-        "Always format the response in clean Markdown. "
-        "Use a short opening sentence, then bullet points or numbered lists when helpful. "
-        "Use short sections with Markdown headings only when they improve clarity. "
-        "For Amharic, Afaan Oromo, and Tigrinya, use natural, fluent phrasing and avoid literal translation from English. "
-        "Do not invent awkward category labels. "
-        "If giving a list of tests, symptoms, or steps, use one item per bullet or number with a brief explanation. "
-        "When the answer is uncertain or depends on a clinician, say so clearly and briefly. "
-        "Use these style references as guidance only, not as fixed templates: "
-        "English example: 'During pregnancy, these checkups are important:' followed by a numbered list with short explanations. "
-        "Amharic example: 'በእርግዝና ወቅት እነዚህ ምርመራዎች አስፈላጊ ናቸው፦' followed by a natural numbered list. "
-        "Afaan Oromo example: 'Yeroo ulfaa qorannoowwan armaan gadii barbaachisoo dha:' followed by a clear numbered list. "
-        "Tigrinya example: 'ኣብ እዋን ጥንሲ እዞም ምርመራታት ኣገደስቲ እዮም፦' followed by a natural numbered list. "
-        "For Amharic, avoid awkward phrases like 'መነሻ ገጽታ' unless the user explicitly asks for definitions. "
-        "For Afaan Oromo, prefer common health wording such as 'qorannoo', 'mallattoo', 'yaala', and 'ittisa'. "
-        "For Tigrinya, prefer clear everyday medical wording over overly literal translations. "
-        "If the user asks for recommended tests during pregnancy, mention practical items like blood tests, urine tests, blood pressure checks, ultrasound, infection screening, and gestational diabetes screening when supported by context."
+        "You are a helpful health chatbot for Ethiopian women. "
+        "Answer only health-related questions. "
+        "Use the provided knowledge-base context as the main source of truth. "
+        "Respond in the selected language. "
+        "Keep the answer concise, natural, and actionable. "
+        "Prefer one short intro sentence followed by 3 to 5 bullets. "
+        "Avoid long explanations, repetition, and unnecessary headings. "
+        "If the answer is uncertain or depends on a clinician, say so briefly."
     )
     last_message = state["messages"][-1]
     user_prompt = (
@@ -642,20 +671,25 @@ def generate(state: AgentState):
                 f"Context:\n{context}\n\n"
                 f"Current user query:\n{user_prompt}\n\n"
                 f"Respond in language code '{language}'.\n"
-                "Treat the selected response language as authoritative when it is one of the supported languages.\n"
-                "Only fall back to auto-detected language when no supported language was selected.\n"
-                "Return a well-structured Markdown answer.\n"
-                "If the query asks for multiple items, prefer a numbered list.\n"
-                "If the response language is Amharic, Afaan Oromo, or Tigrinya, make the wording natural and locally understandable.\n"
-                "Use concrete, medically relevant examples when appropriate instead of vague category labels.\n"
-                "For multilingual answers, prioritize fluency, clarity, and usefulness over literal translation."
+                "Treat the selected response language as authoritative when it is supported.\n"
+                "Return concise Markdown.\n"
+                "Target about 80 to 140 words total.\n"
+                "Use at most 5 bullets.\n"
+                "For Amharic, Afaan Oromo, and Tigrinya, prioritize natural local phrasing."
             )
         ),
     ]
 
+    generation_start = time.monotonic()
     response = llm.invoke(messages)
     response_content = (
         response.content if isinstance(response.content, str) else str(response.content)
+    )
+    logger.info(
+        "Generation metrics — conversation: %s | language: %s | latency_ms: %.1f",
+        state.get("conversation_id", "unknown"),
+        language,
+        (time.monotonic() - generation_start) * 1000,
     )
     return {"messages": [AIMessage(content=response_content)]}
 

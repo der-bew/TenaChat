@@ -22,12 +22,15 @@ Backend authorization is handled by two FastAPI dependencies:
                                        ``None`` for anonymous sessions.
 """
 
+import logging
+
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from fastapi.security import OAuth2PasswordBearer
 from app.db.supabase_client import supabase
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 class SignupRequest(BaseModel):
@@ -65,16 +68,25 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     """Get authenticated user ID (requires token)."""
     if not token:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    auth_response = supabase.auth.get_user(token)
+
+    try:
+        auth_response = supabase.auth.get_user(token)
+    except Exception as e:
+        logger.warning("Supabase token validation failed: %s", e)
+        raise HTTPException(status_code=401, detail="Invalid or expired session") from e
+
     if not auth_response or auth_response.user is None:
-        raise HTTPException(status_code=401, detail="Invalid token")
+        raise HTTPException(status_code=401, detail="Invalid or expired session")
     return auth_response.user.id
 
 
 def get_current_user_or_anonymous(token: str = Depends(oauth2_scheme)):
     """Get current user if authenticated, or None for anonymous users."""
     if token:
-        auth_response = supabase.auth.get_user(token)
-        if auth_response and auth_response.user:
-            return auth_response.user.id
+        try:
+            auth_response = supabase.auth.get_user(token)
+            if auth_response and auth_response.user:
+                return auth_response.user.id
+        except Exception as e:
+            logger.warning("Supabase optional token validation failed: %s", e)
     return None

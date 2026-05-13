@@ -33,7 +33,23 @@ interface SyncConversationsResult {
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+let supabaseClient: ReturnType<typeof createClient> | null = null;
+
+export function isSupabaseConfigured(): boolean {
+  return Boolean(supabaseUrl && supabaseAnonKey);
+}
+
+export function getSupabaseClient() {
+  if (!isSupabaseConfigured()) {
+    throw new Error("Supabase is not configured.");
+  }
+
+  if (!supabaseClient) {
+    supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+  }
+
+  return supabaseClient;
+}
 
 const ANONYMOUS_CONVERSATIONS_KEY = "anonymousConversations";
 const AUTH_ERROR_FALLBACKS: Record<SupportedLanguage, string> = {
@@ -197,6 +213,12 @@ async function getAccessTokenFromSession(
   if (session?.access_token) {
     return session.access_token;
   }
+
+  if (!isSupabaseConfigured()) {
+    return null;
+  }
+
+  const supabase = getSupabaseClient();
 
   const {
     data: { session: currentSession },

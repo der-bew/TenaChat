@@ -30,6 +30,21 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
+TRANSCRIPTION_LANGUAGE_HINTS = {
+    "en": "en",
+    "am": None,
+    "om": None,
+    "ti": None,
+}
+
+
+def _normalize_transcription_language_hint(language_hint: Optional[str]) -> Optional[str]:
+    if not language_hint:
+        return None
+
+    normalized = language_hint.strip().lower()
+    return TRANSCRIPTION_LANGUAGE_HINTS.get(normalized, normalized)
+
 
 class ChatRequest(BaseModel):
     message: str = Field(..., min_length=1, max_length=5000, description="User message")
@@ -388,8 +403,11 @@ async def speech_to_text(
                     "model": "whisper-1",
                     "file": audio_file,
                 }
-                if request.language_hint:
-                    transcription_kwargs["language"] = request.language_hint
+                normalized_language_hint = _normalize_transcription_language_hint(
+                    request.language_hint
+                )
+                if normalized_language_hint:
+                    transcription_kwargs["language"] = normalized_language_hint
 
                 transcript = client.audio.transcriptions.create(**transcription_kwargs)
 
@@ -403,7 +421,10 @@ async def speech_to_text(
 
         return SpeechResponse(
             text=text,
-            detected_language=request.language_hint or None,
+            detected_language=_normalize_transcription_language_hint(
+                request.language_hint
+            )
+            or None,
         )
 
     except HTTPException:

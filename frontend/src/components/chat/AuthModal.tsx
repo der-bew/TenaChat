@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase";
 
 type SupportedLanguage = "en" | "am" | "om" | "ti";
 
@@ -128,6 +128,12 @@ export function AuthModal({
     setError("");
 
     try {
+      if (!isSupabaseConfigured()) {
+        throw new Error("Supabase is not configured.");
+      }
+
+      const supabase = getSupabaseClient();
+
       if (type === "signup") {
         const { error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;

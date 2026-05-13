@@ -15,9 +15,10 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import {
   clearAnonymousHistoryFromStorage,
+  getSupabaseClient,
   getAnonymousHistoryFromStorage,
+  isSupabaseConfigured,
   saveAnonymousHistoryToStorage,
-  supabase,
   syncAnonymousHistoryToBackend,
 } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
@@ -396,13 +397,28 @@ export default function ChatPage() {
     [selectedLanguage],
   );
 
-  const requestHeaders = useMemo(() => {
+  const getRequestHeaders = useCallback(async () => {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
     };
 
     if (anonymousId) {
       headers["x-anonymous-id"] = anonymousId;
+    }
+
+    if (isSupabaseConfigured()) {
+      try {
+        const supabase = getSupabaseClient();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        if (session?.access_token) {
+          headers.Authorization = `Bearer ${session.access_token}`;
+        }
+      } catch (error) {
+        console.error("Error getting auth session for request headers:", error);
+      }
     }
 
     return headers;
@@ -429,6 +445,11 @@ export default function ChatPage() {
   const loadConversationDetail = useCallback(
     async (conversationId: string) => {
       try {
+        if (!isSupabaseConfigured()) {
+          return;
+        }
+
+        const supabase = getSupabaseClient();
         const {
           data: { session },
         } = await supabase.auth.getSession();
@@ -484,6 +505,14 @@ export default function ChatPage() {
   const loadSavedConversations = useCallback(
     async (options?: { append?: boolean }) => {
       try {
+        if (!isSupabaseConfigured()) {
+          setConversations([]);
+          setConversationsOffset(0);
+          setHasMoreConversations(false);
+          return;
+        }
+
+        const supabase = getSupabaseClient();
         const {
           data: { session },
         } = await supabase.auth.getSession();
@@ -570,6 +599,11 @@ export default function ChatPage() {
       }
 
       try {
+        if (!isSupabaseConfigured()) {
+          throw new Error("Supabase is not configured.");
+        }
+
+        const supabase = getSupabaseClient();
         const {
           data: { session },
         } = await supabase.auth.getSession();
@@ -657,9 +691,10 @@ export default function ChatPage() {
       content: string,
       language: SupportedLanguage,
     ): Promise<ChatApiResponse> => {
+      const headers = await getRequestHeaders();
       const response = await fetch(`${API_BASE_URL}/api/chat/chat`, {
         method: "POST",
-        headers: requestHeaders,
+        headers,
         body: JSON.stringify({
           message: content,
           ...(activeConversationId && {
@@ -675,7 +710,7 @@ export default function ChatPage() {
 
       return response.json();
     },
-    [activeConversationId, requestHeaders],
+    [activeConversationId, getRequestHeaders],
   );
 
   const sendImageMessage = useCallback(
@@ -685,10 +720,11 @@ export default function ChatPage() {
       metadata?: InputMetadata,
     ): Promise<ImageApiResponse> => {
       const imageBase64 = image.includes(",") ? image.split(",")[1] : image;
+      const headers = await getRequestHeaders();
 
       const response = await fetch(`${API_BASE_URL}/api/chat/image`, {
         method: "POST",
-        headers: requestHeaders,
+        headers,
         body: JSON.stringify({
           image_base64: imageBase64,
           message: content || copy.imageAnalysisFallback,
@@ -708,7 +744,7 @@ export default function ChatPage() {
     [
       activeConversationId,
       copy.imageAnalysisFallback,
-      requestHeaders,
+      getRequestHeaders,
       selectedLanguage,
     ],
   );
@@ -799,9 +835,10 @@ export default function ChatPage() {
         setIsLoading(true);
 
         try {
+          const headers = await getRequestHeaders();
           const response = await fetch(`${API_BASE_URL}/api/chat/speech`, {
             method: "POST",
-            headers: requestHeaders,
+            headers,
             body: JSON.stringify({
               audio_base64: base64,
               format: "webm",
@@ -838,7 +875,7 @@ export default function ChatPage() {
       copy.errorAudioProcess,
       copy.errorAudioRead,
       copy.errorNoSpeech,
-      requestHeaders,
+      getRequestHeaders,
       selectedLanguage,
       sendMessage,
     ],
@@ -953,6 +990,11 @@ export default function ChatPage() {
     async (id: string) => {
       if (isLoggedIn) {
         try {
+          if (!isSupabaseConfigured()) {
+            throw new Error("Supabase is not configured.");
+          }
+
+          const supabase = getSupabaseClient();
           const {
             data: { session },
           } = await supabase.auth.getSession();
@@ -991,6 +1033,9 @@ export default function ChatPage() {
     const stored = getAnonymousHistoryFromStorage();
     if (!stored.length) return;
 
+    const shouldAutoSelectFirstConversation =
+      conversations.length === 0 && !activeConversationId;
+
     const parsed = fromStoredConversations(
       stored as ReturnType<typeof toStoredConversations>,
     );
@@ -998,12 +1043,12 @@ export default function ChatPage() {
     setConversationsOffset(parsed.length);
     setHasMoreConversations(false);
 
-    if (!activeConversationId && parsed.length > 0) {
+    if (shouldAutoSelectFirstConversation && parsed.length > 0) {
       const first = parsed[0];
       setActiveConversationId(first.id);
       setMessages(first.messages);
     }
-  }, [activeConversationId]);
+  }, [activeConversationId, conversations.length]);
 
   const syncAnonymousHistoryAfterLogin = useCallback(async () => {
     const anonymousConversations = getAnonymousHistoryFromStorage();
@@ -1012,6 +1057,12 @@ export default function ChatPage() {
     }
 
     try {
+      if (!isSupabaseConfigured()) {
+        appendSystemMessage(copy.syncFailed);
+        return;
+      }
+
+      const supabase = getSupabaseClient();
       const {
         data: { session },
       } = await supabase.auth.getSession();
@@ -1063,6 +1114,18 @@ export default function ChatPage() {
   ]);
 
   const handleLogout = useCallback(async () => {
+    if (!isSupabaseConfigured()) {
+      setIsLoggedIn(false);
+      setConversations([]);
+      setMessages([]);
+      setActiveConversationId(null);
+      setConversationsOffset(0);
+      setHasMoreConversations(false);
+      loadAnonymousConversations();
+      return;
+    }
+
+    const supabase = getSupabaseClient();
     await supabase.auth.signOut();
     setIsLoggedIn(false);
     setConversations([]);
@@ -1075,6 +1138,13 @@ export default function ChatPage() {
 
   useEffect(() => {
     const checkAuth = async () => {
+      if (!isSupabaseConfigured()) {
+        setIsLoggedIn(false);
+        loadAnonymousConversations();
+        return;
+      }
+
+      const supabase = getSupabaseClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -1087,6 +1157,12 @@ export default function ChatPage() {
     };
 
     void checkAuth();
+
+    if (!isSupabaseConfigured()) {
+      return;
+    }
+
+    const supabase = getSupabaseClient();
 
     const {
       data: { subscription },
