@@ -12,8 +12,6 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    gcc \
-    g++ \
     curl \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
@@ -25,12 +23,15 @@ RUN --mount=type=cache,target=/root/.cache \
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv venv /opt/venv && \
-    uv sync --frozen --no-dev --no-install-project --python /opt/venv/bin/python
+    uv export --frozen --no-dev --format requirements-txt --no-hashes -o /tmp/requirements.txt && \
+    uv pip install --python /opt/venv/bin/python -r /tmp/requirements.txt
 
 FROM python:3.12-slim AS runtime
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
+    ENVIRONMENT=production \
+    REDIS_URL=redis://redis:6379/0 \
     PATH="/opt/venv/bin:${PATH}"
 
 WORKDIR /app
@@ -39,6 +40,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libstdc++6 \
     libgomp1 \
     curl \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd --system app && useradd --system --gid app --create-home app
