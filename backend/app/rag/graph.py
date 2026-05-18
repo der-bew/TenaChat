@@ -49,10 +49,13 @@ OPENROUTER_PRIMARY_MODEL = os.getenv("OPENROUTER_PRIMARY_MODEL") or os.getenv(
 OPENROUTER_FALLBACK_MODEL = os.getenv(
     "OPENROUTER_FALLBACK_MODEL", "google/gemini-2.5-flash"
 )
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "gemma4:e4b")
 SHORT_TERM_MEMORY_LIMIT = 8
 LONG_TERM_MEMORY_LIMIT = 10
 RETRIEVAL_TOP_K = 3  # Number of documents to retrieve per query
 LLM_TIMEOUT_SECONDS = 25
+OLLAMA_TIMEOUT_SECONDS = int(os.getenv("OLLAMA_TIMEOUT_SECONDS", "180"))
 
 SUPPORTED_LANGUAGES = ("en", "am", "om", "ti")
 
@@ -258,12 +261,15 @@ if serper_available:
         serper_available = False
 
 def _build_chat_llm(
-    model: str, api_key: str | None, base_url: str | None = None
+    model: str,
+    api_key: str | None,
+    base_url: str | None = None,
+    timeout: int = LLM_TIMEOUT_SECONDS,
 ) -> ChatOpenAI:
     return ChatOpenAI(
         model=model,
         temperature=0.3,
-        timeout=LLM_TIMEOUT_SECONDS,
+        timeout=timeout,
         max_retries=1,
         max_tokens=220,
         api_key=SecretStr(api_key) if api_key else None,
@@ -271,12 +277,42 @@ def _build_chat_llm(
     )
 
 
-def _build_generation_llms() -> tuple[str, ChatOpenAI, str | None, ChatOpenAI | None]:
+def _ollama_openai_base_url() -> str | None:
+    if not OLLAMA_BASE_URL:
+        return None
+    return f"{OLLAMA_BASE_URL.rstrip('/')}/v1"
+
+
+def _build_ollama_fallback() -> tuple[str | None, ChatOpenAI | None]:
+    base_url = _ollama_openai_base_url()
+    if not base_url:
+        return None, None
+    return (
+        OLLAMA_MODEL,
+        _build_chat_llm(
+            model=OLLAMA_MODEL,
+            api_key="ollama",
+            base_url=base_url,
+            timeout=OLLAMA_TIMEOUT_SECONDS,
+        ),
+    )
+
+
+def _build_generation_llms() -> tuple[
+    str,
+    ChatOpenAI,
+    str | None,
+    ChatOpenAI | None,
+    str | None,
+    ChatOpenAI | None,
+]:
+    ollama_model, ollama_llm = _build_ollama_fallback()
     if OPENROUTER_API_KEY:
         logger.info(
-            "Using OpenRouter chat models primary=%s fallback=%s",
+            "Using OpenRouter chat models primary=%s fallback=%s ollama_fallback=%s",
             OPENROUTER_PRIMARY_MODEL,
             OPENROUTER_FALLBACK_MODEL,
+            ollama_model,
         )
         return (
             OPENROUTER_PRIMARY_MODEL,
@@ -291,29 +327,62 @@ def _build_generation_llms() -> tuple[str, ChatOpenAI, str | None, ChatOpenAI | 
                 api_key=OPENROUTER_API_KEY,
                 base_url=OPENROUTER_BASE_URL,
             ),
+            ollama_model,
+            ollama_llm,
         )
 
     logger.warning(
-        "OPENROUTER_API_KEY not configured; using legacy OpenAI chat model %s",
+        "OPENROUTER_API_KEY not configured; using legacy OpenAI chat model %s with ollama_fallback=%s",
         LEGACY_OPENAI_AGENT_MODEL,
+        ollama_model,
     )
     return (
         LEGACY_OPENAI_AGENT_MODEL,
         _build_chat_llm(model=LEGACY_OPENAI_AGENT_MODEL, api_key=OPENAI_API_KEY),
         None,
         None,
+        ollama_model,
+        ollama_llm,
     )
 
 
-ACTIVE_PRIMARY_AGENT_MODEL, llm, ACTIVE_FALLBACK_AGENT_MODEL, fallback_llm = (
-    _build_generation_llms()
-)
+(
+    ACTIVE_PRIMARY_AGENT_MODEL,
+    llm,
+    ACTIVE_FALLBACK_AGENT_MODEL,
+    fallback_llm,
+    ACTIVE_OLLAMA_FALLBACK_MODEL,
+    ollama_fallback_llm,
+) = _build_generation_llms()
 
 
 def _invoke_generation_llm(messages: List[BaseMessage]):
     try:
         return llm.invoke(messages)
     except Exception as primary_error:
+        if (
+            ollama_fallback_llm is not None
+            and ACTIVE_OLLAMA_FALLBACK_MODEL is not None
+        ):
+            logger.warning(
+                "Primary chat model %s failed; retrying with Ollama fallback %s: %s",
+                ACTIVE_PRIMARY_AGENT_MODEL,
+                ACTIVE_OLLAMA_FALLBACK_MODEL,
+                primary_error,
+            )
+            try:
+                return ollama_fallback_llm.invoke(messages)
+            except Exception as ollama_error:
+                if fallback_llm is None or ACTIVE_FALLBACK_AGENT_MODEL is None:
+                    raise
+                logger.warning(
+                    "Ollama fallback %s failed; retrying configured fallback %s: %s",
+                    ACTIVE_OLLAMA_FALLBACK_MODEL,
+                    ACTIVE_FALLBACK_AGENT_MODEL,
+                    ollama_error,
+                )
+                return fallback_llm.invoke(messages)
+
         if fallback_llm is None or ACTIVE_FALLBACK_AGENT_MODEL is None:
             raise
         logger.warning(
