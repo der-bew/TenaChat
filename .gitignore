@@ -4,3 +4,9 @@ node_modules/
 __pycache__/
 .python-version
 QUICKSTART.md
+.env
+.pytest_cache/
+.codex/
+.benchmark/
+.agents/
+.ruff_cache/
